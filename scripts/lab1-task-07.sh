@@ -40,6 +40,7 @@ gcloud compute network-endpoint-groups create cepf-neg \
 
 # Add the NEG to the backend service
 gcloud compute backend-services add-backend cepf-backend-service \
+    --region=$REGION \
     --network-endpoint-group=cepf-neg \
     --global
 
