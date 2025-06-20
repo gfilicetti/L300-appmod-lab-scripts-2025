@@ -2,7 +2,7 @@
 
 # variables
 PROJECT_ID=$(gcloud config get-value project)
-CLUSTER=ws-cluster-01
+CLUSTER=cepf-workstation-cluster
 REGION=us-central1
 NETWORK=default
 SUBNETWORK=default
