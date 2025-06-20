@@ -7,6 +7,8 @@ REGION=us-central1
 NETWORK=default
 SUBNETWORK=default
 
+# **NOTE** This operation takes 30 minutes to complete. But in the Lab Env it will already be there
+
 # create a workstation cluster
 gcloud workstations clusters create $CLUSTER \
     --region=$REGION \
