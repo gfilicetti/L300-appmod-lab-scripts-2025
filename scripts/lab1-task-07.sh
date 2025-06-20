@@ -40,8 +40,8 @@ gcloud compute network-endpoint-groups create cepf-neg \
 
 # Add the NEG to the backend service
 gcloud compute backend-services add-backend cepf-backend-service \
-    --network-endpoint-group=cepf-neg \
-    --global
+    --region=$REGION \
+    --network-endpoint-group=cepf-neg
 
 # d) Create a URL map to route requests to the backend service
 echo "Creating URL map..."
