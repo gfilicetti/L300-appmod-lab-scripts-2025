@@ -32,7 +32,7 @@ gcloud compute backend-services create cepf-backend-service \
 # c) Add the Cloud Run service as a backend to the backend service
 echo "Adding Cloud Run service as backend..."
 gcloud compute backend-services add-backend cepf-backend-service \
-    --service=$SERVICE_NAME \
+    --run-service=$SERVICE_NAME \
     --global \
     --region=$REGION
 
