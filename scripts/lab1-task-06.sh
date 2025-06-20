@@ -12,10 +12,10 @@ RELEASE_NAME="cepf-release-v2"
 
 # 1. Promote the release to cepf-prod-service
 echo "Promoting release $RELEASE_NAME to cepf-prod-service..."
-gcloud deploy releases promote $RELEASE_NAME \
+gcloud deploy releases promote \
+    --release $RELEASE_NAME \
     --delivery-pipeline=$PIPELINE_NAME \
     --region=$REGION \
-    --to-target=cepf-prod-service \
     --project=$PROJECT_ID
 
 # 2. Wait for service readiness before setting IAM (for cepf-dev-service)
