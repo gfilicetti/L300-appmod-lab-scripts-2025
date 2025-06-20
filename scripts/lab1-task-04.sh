@@ -9,6 +9,7 @@ PIPELINE_NAME="cepf-run-app-pipeline"
 # Use Google Cloud Deploy to deploy an application to Cloud Run
 
 # 1. Create Skaffold configuration (skaffold.yaml)
+echo "Creating skaffold.yaml..."
 cat <<EOF > skaffold.yaml
 apiVersion: skaffold/v4beta7
 kind: Config
@@ -25,6 +26,7 @@ EOF
 
 # 2. Create service definition files
 # cepf-dev-service.yaml
+echo "Creating cepf-dev-service.yaml..."
 cat <<EOF > cepf-dev-service.yaml
 apiVersion: serving.knative.dev/v1
 kind: Service
@@ -38,6 +40,7 @@ spec:
 EOF
 
 # cepf-prod-service.yaml
+echo "Creating cepf-prod-service.yaml..."
 cat <<EOF > cepf-prod-service.yaml
 apiVersion: serving.knative.dev/v1
 kind: Service
@@ -51,6 +54,7 @@ spec:
 EOF
 
 # 3. Create deploy_pipeline.yaml
+echo "Creating deploy_pipeline.yaml..."
 cat <<EOF > deploy_pipeline.yaml
 apiVersion: deploy.cloud.google.com/v1
 kind: DeliveryPipeline
@@ -93,9 +97,11 @@ spec:
 EOF
 
 # 3. Create Google Cloud Deploy delivery pipeline
+echo "Creating Google Cloud Deploy delivery pipeline..."
 gcloud deploy apply --file=deploy_pipeline.yaml --region=$REGION --project=$PROJECT_ID
 
 # 4. Instantiate delivery pipeline with a release
+echo "Instantiating delivery pipeline with a release..."
 gcloud deploy releases create cepf-release \
     --delivery-pipeline=$PIPELINE_NAME \
     --region=$REGION \
