@@ -20,7 +20,6 @@ build:
   - image: $REGION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/cepf-app
 deploy:
   cloudrun:
-    regions: [$REGION]
     projectid: $PROJECT_ID
 EOF
 
