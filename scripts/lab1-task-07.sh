@@ -20,8 +20,7 @@ gcloud run services update $SERVICE_NAME \
 # a) Create a health check
 echo "Creating health check..."
 gcloud compute health-checks create http cepf-health-check \
-    --global \
-    --use-serving-proxies
+    --global 
 
 # b) Create a backend service
 echo "Creating backend service..."
