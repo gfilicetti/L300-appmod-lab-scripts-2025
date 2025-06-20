@@ -18,10 +18,8 @@ metadata:
 build:
   artifacts:
   - image: $REGION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/cepf-app
-deploy:
-  cloudrun:
-    projectid: $PROJECT_ID
-    manifests: 
+manifests:
+  rawYaml:
     - cepf-dev-service.yaml
     - cepf-prod-service.yaml
 EOF
@@ -72,7 +70,7 @@ kind: Target
 metadata:
   name: cepf-dev-service
   labels:
-    managed-by: gcloud
+    run/managed-by-cnrm: config.cnrm.cloud.google.com
 run:
   location: projects/$PROJECT_ID/locations/$REGION
 ---
@@ -81,7 +79,7 @@ kind: Target
 metadata:
   name: cepf-prod-service
   labels:
-    managed-by: gcloud
+    run/managed-by-cnrm: config.cnrm.cloud.google.com
 run:
   location: projects/$PROJECT_ID/locations/$REGION
 EOF
