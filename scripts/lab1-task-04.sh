@@ -18,9 +18,14 @@ metadata:
 build:
   artifacts:
   - image: $REGION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/cepf-app
-manifests:
-  rawYaml:
+profiles:
+  name: dev
+  manifests:
+    rawYaml:
     - cepf-dev-service.yaml
+  name: prod
+  manifests:
+    rawYaml:
     - cepf-prod-service.yaml
 EOF
 
@@ -63,14 +68,14 @@ metadata:
 serialPipeline:
   stages:
   - targetId: cepf-dev-service
+    profiles: ["dev"]
   - targetId: cepf-prod-service
+    profiles: ["prod"]
 ---
 apiVersion: deploy.cloud.google.com/v1
 kind: Target
 metadata:
   name: cepf-dev-service
-  labels:
-    run/managed-by-cnrm: config.cnrm.cloud.google.com
 run:
   location: projects/$PROJECT_ID/locations/$REGION
 ---
@@ -78,8 +83,6 @@ apiVersion: deploy.cloud.google.com/v1
 kind: Target
 metadata:
   name: cepf-prod-service
-  labels:
-    run/managed-by-cnrm: config.cnrm.cloud.google.com
 run:
   location: projects/$PROJECT_ID/locations/$REGION
 EOF
