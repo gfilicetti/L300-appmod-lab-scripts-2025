@@ -50,8 +50,8 @@ spec:
       - image: $REGION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/cepf-app
 EOF
 
-# 3. Create Google Cloud Deploy delivery pipeline
-gcloud deploy apply --file=deploy_pipeline.yaml --region=$REGION --project=$PROJECT_ID <<EOF
+# 3. Create deploy_pipeline.yaml
+cat <<EOF > deploy_pipeline.yaml
 apiVersion: deploy.cloud.google.com/v1
 kind: DeliveryPipeline
 metadata:
@@ -91,6 +91,9 @@ spec:
   run:
     location: projects/$PROJECT_ID/locations/$REGION
 EOF
+
+# 3. Create Google Cloud Deploy delivery pipeline
+gcloud deploy apply --file=deploy_pipeline.yaml --region=$REGION --project=$PROJECT_ID
 
 # 4. Instantiate delivery pipeline with a release
 gcloud deploy releases create cepf-release \
