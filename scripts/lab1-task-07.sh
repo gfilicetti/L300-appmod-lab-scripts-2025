@@ -5,11 +5,6 @@ PROJECT_ID=$(gcloud config get-value project)
 REGION=us-central1
 SERVICE_NAME="cepf-prod-service"  # Assuming you want to configure the prod service
 FRONTEND_NAME="cepf-frontend"
-# REPO_NAME="cepf-repo"
-# PIPELINE_NAME="cepf-run-app-pipeline"
-# APP_CODE_DIR="app-code"
-# RELEASE_NAME="cepf-release-v2" 
-# OLD_RELEASE_NAME="cepf-release" 
 
 # Configure the load balancer for the Cloud Run app
 
@@ -22,7 +17,6 @@ gcloud run services update $SERVICE_NAME \
 
 # 2. Set up a global external HTTP load balancer
 # This involves multiple steps:
-
 # a) Create a health check
 echo "Creating health check..."
 gcloud compute health-checks create http cepf-health-check \

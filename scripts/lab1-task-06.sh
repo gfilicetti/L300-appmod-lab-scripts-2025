@@ -7,7 +7,6 @@ REPO_NAME="cepf-repo"
 PIPELINE_NAME="cepf-run-app-pipeline"
 APP_CODE_DIR="app-code"
 RELEASE_NAME="cepf-release-v2" 
-OLD_RELEASE_NAME="cepf-release" 
 
 # Promote the release to the production environment once the app passes verification
 
@@ -19,7 +18,11 @@ gcloud deploy releases promote $RELEASE_NAME \
     --to-target=cepf-prod-service \
     --project=$PROJECT_ID
 
-# 2. Allow unauthenticated invocations on cepf-prod-service
+# 2. Wait for service readiness before setting IAM (for cepf-dev-service)
+echo "Waiting for cepf-dev-service to be ready... Sleep 1 minute..."
+sleep 60
+
+# 3. Allow unauthenticated invocations on cepf-prod-service
 echo "Allowing unauthenticated invocations on cepf-prod-service..."
 gcloud run services add-iam-policy-binding cepf-prod-service \
     --member="allUsers" \
@@ -27,7 +30,7 @@ gcloud run services add-iam-policy-binding cepf-prod-service \
     --region=$REGION \
     --project=$PROJECT_ID
 
-# 3. Get and display the URL for cepf-prod-service (for verification)
+# 4. Get and display the URL for cepf-prod-service (for verification)
 SERVICE_URL=$(gcloud run services describe cepf-prod-service --region=$REGION --format='value(status.url)')
 echo "CEPF Prod Service URL: $SERVICE_URL"
 
