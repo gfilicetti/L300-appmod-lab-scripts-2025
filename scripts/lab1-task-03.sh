@@ -12,7 +12,7 @@ REPO_NAME="cepf-repo"
 echo "Downloading application code..."
 gsutil cp $APP_CODE_URI app-code.zip
 unzip app-code.zip -d app-code
-cd app-code || exit
+cd app-code/cepf023-app-code || exit
 
 # 2. Create Artifact Registry repository
 echo "Creating Artifact Registry repository..."
