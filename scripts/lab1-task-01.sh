@@ -9,6 +9,6 @@ CLUSTER=cepf-workstation-cluster
 gcloud workstations configs create cepf-workstation-config \
     --cluster=$CLUSTER \
     --region=$REGION \
-    --machine-type=e2-standard-4 \
-    --enable-nested-virtualization
+    # --enable-nested-virtualization \
+    --machine-type=e2-standard-4
 
