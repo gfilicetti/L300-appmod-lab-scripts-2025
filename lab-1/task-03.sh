@@ -54,4 +54,6 @@ gcloud artifacts repositories create $REPO_NAME \
 echo "Building and pushing Docker image..."
 gcloud builds submit \
     --tag $REGION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/cepf-app \
+    --region=$REGION \
     --project=$PROJECT_ID
+
