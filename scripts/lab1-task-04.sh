@@ -71,9 +71,7 @@ spec:
   serialPipeline:
     stages:
     - targetId: cepf-dev-service
-      profiles: []
     - targetId: cepf-prod-service
-      profiles: []
 ---
 apiVersion: deploy.cloud.google.com/v1
 kind: Target
