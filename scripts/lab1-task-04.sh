@@ -104,18 +104,9 @@ gcloud deploy releases create cepf-release \
     --skaffold-file=skaffold.yaml \
     --project=$PROJECT_ID
 
-# 6. Poll for service readiness before setting IAM (for cepf-dev-service)
+# 6. Wait for service readiness before setting IAM (for cepf-dev-service)
 echo "Waiting for cepf-dev-service to be ready... Sleep 1 minute..."
 sleep 60
-# for i in {1..30}; do  # Try for up to 5 minutes (30 * 10 seconds)
-#   if gcloud run services describe cepf-dev-service --region=$REGION --project=$PROJECT_ID --format="value(status.conditions[?type=='Ready'].status)" | grep -q "True"; then
-#     echo "cepf-dev-service is ready."
-#     break
-#   else
-#     echo "Waiting... ($i/30)"
-#     sleep 10
-#   fi
-# done
 
 # 7. Allow unauthenticated invocations on cepf-dev-service
 echo "Allowing unauthenticated invocations on cepf-dev-service..."

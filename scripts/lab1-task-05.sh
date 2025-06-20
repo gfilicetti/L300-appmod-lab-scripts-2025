@@ -5,9 +5,9 @@ PROJECT_ID=$(gcloud config get-value project)
 REGION=us-central1
 REPO_NAME="cepf-repo"
 PIPELINE_NAME="cepf-run-app-pipeline"
-APP_CODE_DIR="app-code"  # Assuming your app code is in this directory
-RELEASE_NAME="cepf-release-v2" 
+APP_CODE_DIR="app-code/cepf023-app-code"
 OLD_RELEASE_NAME="cepf-release" 
+RELEASE_NAME="cepf-release-v2" 
 
 # Fix any issues and redeploy the app
 
@@ -18,12 +18,11 @@ echo "Updating Dockerfile to use index_v2.html..."
 # BE CAREFUL: This could break your Dockerfile if it contains other COPY commands.
 # Consider a more specific replacement if necessary.
 if [[ -f "$APP_CODE_DIR/Dockerfile" ]]; then
-    sed -i "" 's/COPY index.html/COPY index_v2.html/' "$APP_CODE_DIR/Dockerfile"
+    sed -i 's/index_v1.html/index_v2.html/' "$APP_CODE_DIR/Dockerfile"
 else
     echo "Error: Dockerfile not found in $APP_CODE_DIR. Please ensure the path is correct and you are in the right directory"
     exit 1
 fi
-
 
 # 2. Build and push the new image
 echo "Building and pushing new Docker image..."
