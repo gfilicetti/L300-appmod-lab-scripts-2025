@@ -63,3 +63,4 @@ echo "Load Balancer IP Address: $LB_IP"
 
 # Verification (Manual): Access the application using the IP address
 echo "Access the application in your browser using the IP address: http://$LB_IP"
+echo "**NOTE** Wait a few minutes for the LB to deploy before trying the URL"
