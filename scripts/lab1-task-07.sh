@@ -31,10 +31,17 @@ gcloud compute backend-services create cepf-backend-service \
 
 # c) Add the Cloud Run service as a backend to the backend service
 echo "Adding Cloud Run service as backend..."
+
+# Create the Serverless NEG
+gcloud compute network-endpoint-groups create cepf-neg \
+    --region=$REGION \
+    --network-endpoint-type=serverless \
+    --cloud-run-service=$SERVICE_NAME
+
+# Add the NEG to the backend service
 gcloud compute backend-services add-backend cepf-backend-service \
-    --run-service=$SERVICE_NAME \
-    --global \
-    --region=$REGION
+    --network-endpoint-group=cepf-neg \
+    --global
 
 # d) Create a URL map to route requests to the backend service
 echo "Creating URL map..."
