@@ -21,6 +21,9 @@ build:
 deploy:
   cloudrun:
     projectid: $PROJECT_ID
+    manifests: 
+    - cepf-dev-service.yaml
+    - cepf-prod-service.yaml
 EOF
 
 # 2. Create service definition files
