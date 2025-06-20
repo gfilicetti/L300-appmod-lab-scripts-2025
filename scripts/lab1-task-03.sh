@@ -9,11 +9,15 @@ SERVICE_ACCOUNT=$(gcloud projects describe $PROJECT_ID --format="value(defaultSe
 
 # Use Cloud Build to build a container application
 
-# 0. Grant storage.objects.get access to the default service account
+# 0. Grant permissions to the default service account
 echo "Granting storage.objects.get access to the default Compute Engine service account..."
 gcloud iam service-accounts add-iam-policy-binding $SERVICE_ACCOUNT \
     --member="serviceAccount:$SERVICE_ACCOUNT" \
     --role="roles/storage.objectViewer" \
+    --project=$PROJECT_ID
+gcloud iam service-accounts add-iam-policy-binding $SERVICE_ACCOUNT \
+    --member="serviceAccount:$SERVICE_ACCOUNT" \
+    --role="roles/artifactregistry.writer" \
     --project=$PROJECT_ID
 
 # 1. Download application code
