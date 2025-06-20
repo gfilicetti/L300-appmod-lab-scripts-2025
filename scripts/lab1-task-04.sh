@@ -67,11 +67,10 @@ metadata:
     cli-core-version: 2023.03.28
     config-controller-version: 1.11.0
     api-version: v1
-spec:
-  serialPipeline:
-    stages:
-    - targetId: cepf-dev-service
-    - targetId: cepf-prod-service
+serialPipeline:
+  stages:
+  - targetId: cepf-dev-service
+  - targetId: cepf-prod-service
 ---
 apiVersion: deploy.cloud.google.com/v1
 kind: Target
