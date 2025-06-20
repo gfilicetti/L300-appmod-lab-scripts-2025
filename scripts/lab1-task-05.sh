@@ -26,7 +26,9 @@ fi
 
 # 2. Build and push the new image
 echo "Building and pushing new Docker image..."
+pushd $APP_CODE_DIR || exit
 gcloud builds submit --tag $REGION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/cepf-app --project=$PROJECT_ID
+popd || exit
 
 # 3. Abandon the older release (Optional, but recommended)
 #  To find the release name, you might need to list releases:
