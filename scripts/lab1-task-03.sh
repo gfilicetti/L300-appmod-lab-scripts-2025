@@ -5,8 +5,16 @@ PROJECT_ID=$(gcloud config get-value project)
 REGION=us-central1
 APP_CODE_URI="gs://cloud-training/cepf/cepf023/cepf023-app-code.zip"
 REPO_NAME="cepf-repo"
+SERVICE_ACCOUNT=$(gcloud projects describe $PROJECT_ID --format="value(defaultServiceAccount)") 
 
 # Use Cloud Build to build a container application
+
+# 0. Grant storage.objects.get access to the default service account
+echo "Granting storage.objects.get access to the default Compute Engine service account..."
+gcloud iam service-accounts add-iam-policy-binding $SERVICE_ACCOUNT \
+    --member="serviceAccount:$SERVICE_ACCOUNT" \
+    --role="roles/storage.objectViewer" \
+    --project=$PROJECT_ID
 
 # 1. Download application code
 echo "Downloading application code..."
