@@ -78,9 +78,8 @@ metadata:
   name: cepf-dev-service
   labels:
     managed-by: gcloud
-spec:
-  run:
-    location: projects/$PROJECT_ID/locations/$REGION
+run:
+  location: projects/$PROJECT_ID/locations/$REGION
 ---
 apiVersion: deploy.cloud.google.com/v1
 kind: Target
@@ -88,9 +87,8 @@ metadata:
   name: cepf-prod-service
   labels:
     managed-by: gcloud
-spec:
-  run:
-    location: projects/$PROJECT_ID/locations/$REGION
+run:
+  location: projects/$PROJECT_ID/locations/$REGION
 EOF
 
 # 3. Create Google Cloud Deploy delivery pipeline
