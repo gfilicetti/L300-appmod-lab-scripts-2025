@@ -60,13 +60,6 @@ apiVersion: deploy.cloud.google.com/v1
 kind: DeliveryPipeline
 metadata:
   name: $PIPELINE_NAME
-  labels:
-    managed-by: gcloud
-    skaffold-version: 2.10.0
-    cli-version: 426.0.0
-    cli-core-version: 2023.03.28
-    config-controller-version: 1.11.0
-    api-version: v1
 serialPipeline:
   stages:
   - targetId: cepf-dev-service
