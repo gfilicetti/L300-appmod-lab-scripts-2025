@@ -84,11 +84,11 @@ run:
   location: projects/$PROJECT_ID/locations/$REGION
 EOF
 
-# 3. Create Google Cloud Deploy delivery pipeline
+# 4. Create Google Cloud Deploy delivery pipeline
 echo "Creating Google Cloud Deploy delivery pipeline..."
 gcloud deploy apply --file=deploy_pipeline.yaml --region=$REGION --project=$PROJECT_ID
 
-# 4. Instantiate delivery pipeline with a release
+# 5. Instantiate delivery pipeline with a release
 echo "Instantiating delivery pipeline with a release..."
 gcloud deploy releases create cepf-release \
     --delivery-pipeline=$PIPELINE_NAME \
@@ -97,7 +97,19 @@ gcloud deploy releases create cepf-release \
     --skaffold-file=skaffold.yaml \
     --project=$PROJECT_ID
 
-# 5. Allow unauthenticated invocations on cepf-dev-service
+# 6. Poll for service readiness before setting IAM (for cepf-dev-service)
+echo "Waiting for cepf-dev-service to be ready..."
+for i in {1..30}; do  # Try for up to 5 minutes (30 * 10 seconds)
+  if gcloud run services describe cepf-dev-service --region=$REGION --project=$PROJECT_ID --format="value(status.conditions[?type=='Ready'].status)" | grep -q "True"; then
+    echo "cepf-dev-service is ready."
+    break
+  else
+    echo "Waiting... ($i/30)"
+    sleep 10
+  fi
+done
+
+# 7. Allow unauthenticated invocations on cepf-dev-service
 echo "Allowing unauthenticated invocations on cepf-dev-service..."
 gcloud run services add-iam-policy-binding cepf-dev-service \
     --member="allUsers" \
@@ -105,7 +117,7 @@ gcloud run services add-iam-policy-binding cepf-dev-service \
     --region=$REGION \
     --project=$PROJECT_ID
 
-# 6. Get and display the URL for cepf-dev-service (for verification)
+# 8. Get and display the URL for cepf-dev-service (for verification)
 SERVICE_URL=$(gcloud run services describe cepf-dev-service --region=$REGION --format='value(status.url)')
 echo "CEPF Dev Service URL: $SERVICE_URL"
 
