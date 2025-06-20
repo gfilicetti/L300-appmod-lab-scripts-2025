@@ -17,16 +17,10 @@ gcloud run services update $SERVICE_NAME \
 
 # 2. Set up a global external HTTP load balancer
 # This involves multiple steps:
-# a) Create a health check
-echo "Creating health check..."
-gcloud compute health-checks create http cepf-health-check \
-    --global 
-
 # b) Create a backend service
 echo "Creating backend service..."
 gcloud compute backend-services create cepf-backend-service \
     --load-balancing-scheme=EXTERNAL \
-    --health-checks=cepf-health-check \
     --global
 
 # c) Add the Cloud Run service as a backend to the backend service
