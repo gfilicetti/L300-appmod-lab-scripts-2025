@@ -2,10 +2,11 @@
 
 # variables
 PROJECT_ID=$(gcloud config get-value project)
+PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)") 
 REGION=us-central1
 APP_CODE_URI="gs://cloud-training/cepf/cepf023/cepf023-app-code.zip"
 REPO_NAME="cepf-repo"
-SERVICE_ACCOUNT=$(gcloud projects describe $PROJECT_ID --format="value(defaultServiceAccount)") 
+SERVICE_ACCOUNT=$PROJECT_NUMBER-compute@developer.gserviceaccount.com # Construct service account email
 
 # Use Cloud Build to build a container application
 
