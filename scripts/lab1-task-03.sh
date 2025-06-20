@@ -12,14 +12,12 @@ SERVICE_ACCOUNT=$PROJECT_NUMBER-compute@developer.gserviceaccount.com # Construc
 
 # 0. Grant permissions to the default service account
 echo "Granting storage.objects.get access to the default Compute Engine service account..."
-gcloud iam service-accounts add-iam-policy-binding $SERVICE_ACCOUNT \
+gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member="serviceAccount:$SERVICE_ACCOUNT" \
-    --role="roles/storage.objectViewer" \
-    --project=$PROJECT_ID
-gcloud iam service-accounts add-iam-policy-binding $SERVICE_ACCOUNT \
+    --role="roles/storage.objectViewer"
+gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member="serviceAccount:$SERVICE_ACCOUNT" \
-    --role="roles/artifactregistry.writer" \
-    --project=$PROJECT_ID
+    --role="roles/artifactregistry.writer"
 
 # 1. Download application code
 echo "Downloading application code..."
