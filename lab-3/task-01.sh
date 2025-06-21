@@ -8,7 +8,6 @@ FLEET_HOST_PROJECT=$(gcloud config get-value project) # Replace if needed
 # Prompt the user for the zone
 read -p "Enter the zone for the GKE cluster provided to you: " ZONE
 
-
 # 1. Create the Standard mode GKE cluster
 echo "Creating Standard GKE cluster: $CLUSTER_NAME"
 gcloud container clusters create $CLUSTER_NAME \
