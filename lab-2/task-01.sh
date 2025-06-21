@@ -11,6 +11,6 @@ gcloud logging buckets create --location=global $LOG_BUCKET_NAME --project=$PROJ
 
 # 2. Create the BigQuery Dataset linked to the Log Bucket
 echo "Creating BigQuery Dataset: $BQ_DATASET_NAME"
-gcloud logging datasets create $BQ_DATASET_NAME --bucket=$LOG_BUCKET_NAME --location=global --project=$PROJECT_ID
+bq mk --location=global --dataset $PROJECT_ID:$BQ_DATASET_NAME
 
-echo "Log Bucket '$LOG_BUCKET_NAME' created and linked to BigQuery Dataset '$BQ_DATASET_NAME'."
+echo "Log Bucket '$LOG_BUCKET_NAME' created and BigQuery Dataset '$BQ_DATASET_NAME' created."
