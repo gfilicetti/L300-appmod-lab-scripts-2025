@@ -3,10 +3,8 @@
 # Variables
 PROJECT_ID=$(gcloud config get-value project)
 CLUSTER_NAME="cepf-gke-cluster"
-FLEET_HOST_PROJECT=$(gcloud config get-value project) # Replace if needed
-
-# Prompt the user for the zone
-read -p "Enter the zone for the GKE cluster provided to you: " ZONE
+FLEET_HOST_PROJECT=$(gcloud config get-value project) 
+ZONE="us-central1-a"
 
 # 1. Create the Standard mode GKE cluster
 echo "Creating Standard GKE cluster: $CLUSTER_NAME"
