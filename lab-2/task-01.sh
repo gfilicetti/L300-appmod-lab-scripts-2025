@@ -28,7 +28,18 @@ cat > logs_def.json <<EOF
   "source_uris": [
     "$STORAGE_URI/*.json"
   ],
-  "source_format": "NEWLINE_DELIMITED_JSON"
+  "source_format": "NEWLINE_DELIMITED_JSON",
+  "schema": {
+    "fields": [
+      { "name": "insertId", "type": "STRING" },
+      { "name": "jsonPayload", "type": "JSON" },
+      { "name": "logName", "type": "STRING" },
+      { "name": "receiveTimestamp", "type": "TIMESTAMP" },
+      { "name": "resource", "type": "JSON" },
+      { "name": "severity", "type": "STRING" },
+      { "name": "timestamp", "type": "TIMESTAMP" }
+    ]
+  }
 }
 EOF
 
