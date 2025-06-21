@@ -10,7 +10,7 @@ EXTERNAL_TABLE_NAME="cepf_external_logs"
 
 # 1. Create the Log Bucket
 echo "Creating Log Bucket: $LOG_BUCKET_NAME"
-gcloud logging buckets create --location=global $LOG_BUCKET_NAME --project=$PROJECT_ID
+gsutil mb gs://$LOG_BUCKET_NAME
 
 # 2. Create the BigQuery Dataset
 echo "Creating BigQuery Dataset: $BQ_DATASET_NAME"
