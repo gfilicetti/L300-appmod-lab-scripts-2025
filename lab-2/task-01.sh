@@ -25,13 +25,12 @@ STORAGE_URI="gs://$LOG_BUCKET_NAME/*"
 
 # This assumes the logs are in JSON format.  Adjust the schema and format if needed.
 bq mk \
-  --external_table \
+  --external_source \
   --source_format=NEWLINE_DELIMITED_JSON \
-  --autodetect \
-  $STORAGE_URI/*.json \
-  $PROJECT_ID:$BQ_DATASET_NAME.$EXTERNAL_TABLE_NAME \
   --time_partitioning_field=timestamp_field \
   --time_partitioning_type=DAY \
-  --time_partitioning_expiration=2592000 --time_partitioning_require_partition_filter=TRUE
+  --time_partitioning_expiration=2592000 --time_partitioning_require_partition_filter=TRUE \
+  $STORAGE_URI/*.json \
+  $PROJECT_ID:$BQ_DATASET_NAME.$EXTERNAL_TABLE_NAME
 
 echo "External Table '$EXTERNAL_TABLE_NAME' created, linked to '$STORAGE_URI'."
