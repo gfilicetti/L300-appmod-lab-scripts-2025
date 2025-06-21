@@ -2,8 +2,9 @@
 
 # Variables
 PROJECT_ID=$(gcloud config get-value project)
+PROJECT_NUM=$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)") 
 REGION=us-central1
-LOG_BUCKET_NAME="cepf_log_bucket"
+LOG_BUCKET_NAME="cepf_log_bucket-$PROJECT_NUM"
 BQ_DATASET_NAME="cepf_dataset"
 EXTERNAL_TABLE_NAME="cepf_external_logs"
 
@@ -20,17 +21,21 @@ echo "Log Bucket '$LOG_BUCKET_NAME' created and BigQuery Dataset '$BQ_DATASET_NA
 # 3. Create an External Table linked to the Log Bucket
 echo "Creating External Table: $EXTERNAL_TABLE_NAME"
 
-# Construct the Cloud Storage URI pattern.  Logs are typically stored with a prefix.
-STORAGE_URI="gs://$LOG_BUCKET_NAME/*"  
+STORAGE_URI="gs://$LOG_BUCKET_NAME"  
 
-# This assumes the logs are in JSON format.  Adjust the schema and format if needed.
-bq mk \
-  --external_source \
-  --source_format=NEWLINE_DELIMITED_JSON \
-  --time_partitioning_field=timestamp_field \
-  --time_partitioning_type=DAY \
-  --time_partitioning_expiration=2592000 --time_partitioning_require_partition_filter=TRUE \
-  $STORAGE_URI/*.json \
-  $PROJECT_ID:$BQ_DATASET_NAME.$EXTERNAL_TABLE_NAME
+cat > logs_def.json <<EOF
+{
+  "source_uris": [
+    "$STORAGE_URI/*.json"
+  ],
+  "source_format": "NEWLINE_DELIMITED_JSON"
+}
+EOF
+
+# 4. Create an External Table linked to the definition
+echo "Creating External Table: $EXTERNAL_TABLE_NAME"
+
+bq mk --external_table_definition=logs_def.json \
+    $PROJECT_ID:$BQ_DATASET_NAME.$EXTERNAL_TABLE_NAME
 
 echo "External Table '$EXTERNAL_TABLE_NAME' created, linked to '$STORAGE_URI'."
