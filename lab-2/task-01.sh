@@ -48,7 +48,6 @@ echo "Creating External Table: $EXTERNAL_TABLE_NAME"
 
 # Use autodetect instead of providing a schema file or inline schema
 bq mk --external_table_definition=logs_def.json \
-    --autodetect \
     $PROJECT_ID:$BQ_DATASET_NAME.$EXTERNAL_TABLE_NAME
 
 echo "External Table '$EXTERNAL_TABLE_NAME' created, linked to '$STORAGE_URI'."
