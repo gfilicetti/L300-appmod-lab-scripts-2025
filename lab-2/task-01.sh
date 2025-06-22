@@ -2,8 +2,9 @@
 
 # Variables
 PROJECT_ID=$(gcloud config get-value project)
+PROJECT_NUM=$(gcloud projects describe "$PROJECT_ID" --format="value(projectNumber)")
 REGION=us-central1
-LOG_BUCKET_NAME="cepf_log_bucket"
+LOG_BUCKET_NAME="cepf_log_bucket-$PROJECT_NUM"
 BQ_DATASET_NAME="cepf_dataset"
 SINK_NAME="${LOG_BUCKET_NAME}_to_${BQ_DATASET_NAME}_sink"
 
@@ -22,10 +23,9 @@ echo "Log Bucket '$LOG_BUCKET_NAME' and BigQuery Dataset '$BQ_DATASET_NAME' crea
 # 3. Create a log sink to route logs from the bucket to the BigQuery dataset
 echo "Creating log sink '$SINK_NAME' to link bucket to BigQuery dataset..."
 SINK_DESTINATION="bigquery.googleapis.com/projects/$PROJECT_ID/datasets/$BQ_DATASET_NAME"
-LOGGING_SOURCE="logging.googleapis.com/projects/$PROJECT_ID/locations/global/buckets/$LOG_BUCKET_NAME"
 
 gcloud logging sinks create "$SINK_NAME" "$SINK_DESTINATION" \
-  --source="$LOGGING_SOURCE" \
+  --log-bucket="$LOG_BUCKET_NAME" \
   --project="$PROJECT_ID" || { echo "ERROR: Failed to create log sink. Exiting."; exit 1; }
 
 # 4. Grant permissions to the sink's service account
