@@ -7,14 +7,15 @@ FLEET_HOST_PROJECT=$(gcloud config get-value project)
 # Qwiklabs will give you a zone to use in the instructions once the environment is provisioned. Use that zone here.
 ZONE="us-west1-a" # use Zone given to you by qwiklabs
 
-# 1. Create the Standard mode GKE cluster
-echo "Creating Standard GKE cluster: $CLUSTER_NAME"
+# 1. Create the Enterprise mode GKE cluster
+echo "Creating Enterprise GKE cluster: $CLUSTER_NAME"
 gcloud container clusters create $CLUSTER_NAME \
     --zone=$ZONE \
     --cluster-version=latest \
     --release-channel=regular \
     --machine-type=e2-standard-4 \
     --num-nodes=3 \
+    --tier=enterprise \
     --workload-pool=$PROJECT_ID.svc.id.goog \
     --project=$PROJECT_ID
 
