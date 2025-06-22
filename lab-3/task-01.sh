@@ -21,7 +21,6 @@ gcloud container clusters create $CLUSTER_NAME \
 echo "Registering GKE cluster to fleet: $CLUSTER_NAME"
 gcloud container fleet memberships register $CLUSTER_NAME-membership \
     --gke-cluster=us-central1/$CLUSTER_NAME \
-    --fleet-project=$FLEET_HOST_PROJECT \
     --project=$PROJECT_ID
 
 echo "GKE Cluster '$CLUSTER_NAME' created and registered to the fleet."
