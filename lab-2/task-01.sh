@@ -16,7 +16,7 @@ gcloud logging buckets create "$LOG_BUCKET_NAME" \
     --enable-analytics \
     --project="$PROJECT_ID" || { echo "ERROR: Failed to create log bucket. Exiting."; exit 1; }
 
-# 2. Create the BigQuery Dataset
+# 2. Create a BigQuery Dataset linked to this bucket
 echo "Creating the linked BigQuery Dataset: $BQ_DATASET_NAME"
 gcloud logging links create $BQ_DATASET_NAME \
   --location=global \

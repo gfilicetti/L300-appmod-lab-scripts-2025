@@ -25,7 +25,7 @@ if [ -z "$WRITER_IDENTITY" ]; then
     exit 1
 fi
 
-bq add-iam-policy-binding --member="$WRITER_IDENTITY" --role='roles/bigquery.dataEditor' "$PROJECT_ID:$BQ_DATASET_NAME" > /dev/null
+bq add-iam-policy-binding --member="$WRITER_IDENTITY" --role='roles/bigquery.dataEditor' "$PROJECT_ID:$BQ_DATASET_NAME"
 
 echo "Permissions granted. The log bucket '$LOG_BUCKET_NAME' is now receiving logs via the sink '$LOG_SINK_NAME'."
 
