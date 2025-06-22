@@ -4,114 +4,112 @@
 # and test Anthos Config Management capabilities.  It includes verification
 # steps where possible, but some actions require manual configuration in the
 # Google Cloud Console.
+# This script configures Policy Controller and Config Sync using gcloud and kubectl,
+# and tests the Anthos Config Management capabilities.
 
 # Variables (Update these with your actual values)
+# --- Configuration ---
 PROJECT_ID=$(gcloud config get-value project)
 GKE_CLUSTER_NAME="cepf-gke-cluster"
-GKE_CLUSTER_ZONE="YOUR_GKE_CLUSTER_ZONE" # Replace with your GKE cluster's zone
-CONFIG_SYNC_REPO="https://github.com/GoogleCloudPlatform/anthos-config-management-samples"  # Or your specific repo
+GKE_CLUSTER_ZONE="us-central1-a"
+CONFIG_SYNC_REPO="https://github.com/GoogleCloudPlatform/anthos-config-management-samples/tree/main/quickstart/config-sync"
+MEMBERSHIP_NAME="${GKE_CLUSTER_NAME}-membership"
+POLICY_DIR="policies"
 
-# --- Task 2: Configure Policy Controller and Config Sync ---
-
-echo "**Task 2: Configure Policy Controller and Config Sync**"
+# 1. Enable required APIs
+echo "Step 1: Enabling Anthos API..."
+gcloud services enable anthos.googleapis.com --project="$PROJECT_ID"
+echo "API enabled."
 echo ""
 
-echo "Step 1: Configure Policy Controller and Config Sync via Google Cloud Console"
-echo "-------------------------------------------------------------------------"
-echo "a) Navigate to the Google Kubernetes Engine page in the Cloud Console:"
-echo "   https://console.cloud.google.com/kubernetes/list"
+# 2. Create the fleet configuration file for Config Sync and Policy Controller
+echo "Step 2: Creating fleet configuration file (config.yaml)..."
+cat <<EOF > config.yaml
+applySpecVersion: 1
+spec:
+  configSync:
+    enabled: true
+    sourceFormat: unstructured
+    git:
+      repo: $CONFIG_SYNC_REPO
+      branch: main
+      dir: "$POLICY_DIR"
+      secretType: none
+  policyController:
+    enabled: true
+    # Allows for mutation of resources
+    referentialRulesEnabled: true
+    # Installs a library of common policy templates
+    templateLibraryInstalled: true
+EOF
+echo "Configuration file created."
 echo ""
-echo "b) Select your GKE cluster ('$GKE_CLUSTER_NAME')."
-echo ""
-echo "c) Go to the 'Config' tab."
-echo ""
-echo "d) Click 'Install Config Sync'."
-echo ""
-echo "e) Configure Config Sync:"
-echo "   - Git repository URL: $CONFIG_SYNC_REPO"
-echo "   - Select 'Private repository' and configure your credentials if needed."
-echo "   - Branch or tag: main"  # Or the appropriate branch/tag
-echo "   - Policy directory: config-sync-quickstart/kustomize-packages" # Or adjust the path within your repo
-echo "   - Enable 'Apply resources in the specified packages'."
-echo ""
-echo "f) Click 'Install and Configure'."
-echo ""
-echo "g) After Config Sync is configured (this might take a few minutes), click"
-echo "   'Enable Policy Controller'."
-echo ""
-echo "h) In the Policy Controller configuration, you can leave the default settings"
-echo "   or customize as needed. Click 'Save'."
-echo ""
-echo "i) Repeat these steps for your Anthos cluster on bare metal if it is not already configured."
-echo "   You'll access its configuration from the Kubernetes Clusters page."
-echo ""
-echo "   Note: If the Bare Metal cluster is not listed, ensure you have connected to it"
-echo "         using the Google Cloud Console as described in the previous task."
 
-# Step 2: Verify that the hello namespace config is synced
+# 3. Apply the configuration to the cluster's fleet membership
+echo "Step 3: Applying configuration to fleet membership '$MEMBERSHIP_NAME'..."
+echo "This may take several minutes..."
+gcloud container fleet config-management apply \
+    --membership="$MEMBERSHIP_NAME" \
+    --config=config.yaml \
+    --project="$PROJECT_ID" || { echo "ERROR: Failed to apply fleet configuration. Exiting."; exit 1; }
+echo "Fleet configuration applied."
 echo ""
-echo "Step 2: Verify that the 'hello' namespace config is synced"
-echo "---------------------------------------------------------"
-echo "This step requires interacting with your cluster using kubectl."
-echo "Since we cannot automatically connect to your cluster and run kubectl commands, you will"
-echo "need to perform these steps manually."
-echo ""
-echo "a) Connect to your GKE cluster ('$GKE_CLUSTER_NAME') using kubectl:"
-echo "   gcloud container clusters get-credentials $GKE_CLUSTER_NAME --zone=$GKE_CLUSTER_ZONE --project=$PROJECT_ID"
-echo ""
-echo "b) Once connected, verify the 'hello' namespace exists:"
-echo "   kubectl get namespace hello"
-echo ""
-echo "   If the namespace exists, the configuration has been successfully synced."
-echo ""
-echo "c) You can also inspect resources within the 'hello' namespace to confirm more"
-echo "   details of the synced configuration:"
-echo "   kubectl get all -n hello"
-echo ""
-echo "d) For your Anthos cluster on bare metal, you will likely need to"
-echo "   modify your kubeconfig file (e.g., ~/.kube/config) to point to the"
-echo "   bare metal cluster's API server.  The details of this will depend"
-echo "   on your specific bare metal setup and how it's integrated with the fleet."
-echo "   Once your kubeconfig is set up, you can use kubectl commands as shown above."
 
-# Step 3: Test the Policy Controller constraint
+# 4. Get cluster credentials to use kubectl
+echo "Step 4: Getting credentials for '$GKE_CLUSTER_NAME' to verify..."
+gcloud container clusters get-credentials "$GKE_CLUSTER_NAME" --zone="$GKE_CLUSTER_ZONE" --project="$PROJECT_ID"
 echo ""
-echo "Step 3: Test the Policy Controller constraint (no-ext-services.yaml)"
-echo "------------------------------------------------------------------"
-echo "a) Ensure you are connected to your GKE cluster ('$GKE_CLUSTER_NAME') with kubectl"
-echo "   (see instructions in Step 2)."
+
+# 5. Verify that the 'hello' namespace from the repo is synced
+echo "Step 5: Verifying that the 'hello' namespace is synced by Config Sync..."
+echo "Waiting for namespace 'hello' to be created..."
+until kubectl get namespace hello > /dev/null 2>&1; do
+    echo -n "."
+    sleep 5
+done
 echo ""
-echo "b) The config-sync repository contains a 'no-ext-services.yaml' constraint. This constraint"
-echo "   should prevent the creation of Kubernetes services of type 'LoadBalancer' (external services)."
+echo "SUCCESS: Namespace 'hello' found."
+kubectl get all -n hello
 echo ""
-echo "c) To test this constraint, try to apply a service definition that creates an external service."
-echo "   Create a file named 'service.yaml' (or adapt an existing one) with content similar to:"
+
+# 6. Test the Policy Controller constraint (no-ext-services.yaml)
+echo "Step 6: Testing the Policy Controller constraint that blocks external services..."
+# The sample repo includes a constraint that prevents services of type LoadBalancer.
+# We will attempt to create one to verify the policy is enforced.
+
+echo "Creating a test service of type LoadBalancer (service.yaml)..."
+cat <<EOF > service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-external-service
+  namespace: default
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    # This selector doesn't need to match anything for the policy to be tested
+    app: test-app
+EOF
+
+echo "Attempting to apply the forbidden service. This command is expected to fail."
+# We redirect stderr to /dev/null to hide the expected error message for a cleaner output.
+# The 'if !' condition checks for a non-zero exit code, which indicates failure (and thus success for our test).
+if ! kubectl apply -f service.yaml 2> /dev/null; then
+    echo "SUCCESS: Policy Controller correctly blocked the creation of the LoadBalancer service."
+else
+    echo "FAILURE: The LoadBalancer service was created, which means the policy is not being enforced."
+    # Clean up the service if it was created
+    kubectl delete -f service.yaml --ignore-not-found
+fi
 echo ""
-echo "   apiVersion: v1"
-echo "   kind: Service"
-echo "   metadata:"
-echo "     name: test-external-service"
-echo "     namespace: default  # Or a namespace other than 'hello'"
-echo "   spec:"
-echo "     type: LoadBalancer"
-echo "     ports:"
-echo "       - port: 80"
-echo "         targetPort: 8080"
-echo "     selector:"
-echo "       app: my-app  # Replace with a selector matching existing pods"
-echo ""
-echo "d) Apply this service definition to your GKE cluster:"
-echo "   kubectl apply -f service.yaml"
-echo ""
-echo "e) If the Policy Controller constraint is working correctly, the apply command"
-echo "   should be rejected with an error message indicating that the creation of an"
-echo "   external service is prohibited by the 'no-ext-services' constraint."
-echo ""
-echo "f) Check for Policy Controller violations:"
-echo "   You can inspect Policy Controller's status and check for violations using"
-echo "   kubectl commands, but the specific commands and output format depend on the"
-echo "   version of Policy Controller and how it is installed.  Consult the"
-echo "   Policy Controller documentation for details (search for 'kubectl check violations')."
+
+# 7. Cleanup local files
+echo "Step 7: Cleaning up local configuration files..."
+rm config.yaml service.yaml
+echo "Cleanup complete."
 echo ""
 
 echo "--- End of Script ---"
