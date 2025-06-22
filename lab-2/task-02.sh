@@ -8,7 +8,7 @@ BQ_DATASET_NAME="cepf_dataset"
 SINK_DESTINATION="bigquery.googleapis.com/projects/$PROJECT_ID/datasets/$BQ_DATASET_NAME"
 
 # 1. Create a log sink to route logs from the bucket to the BigQuery dataset
-echo "Creating log sink '$LOG_SINK_NAME' to link bucket to BigQuery dataset..."
+echo "Creating log sink '$LOG_SINK_NAME' to route logs to our log bucket..."
 
 gcloud logging sinks create "$LOG_SINK_NAME" "$SINK_DESTINATION" \
   --log-filter='resource.type="k8s_container"' \
