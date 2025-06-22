@@ -27,5 +27,6 @@ fi
 
 bq add-iam-policy-binding --member="$WRITER_IDENTITY" --role='roles/bigquery.dataEditor' "$PROJECT_ID:$BQ_DATASET_NAME" > /dev/null
 
-echo "Permissions granted. The log bucket '$LOG_BUCKET_NAME' is now linked to BigQuery dataset '$BQ_DATASET_NAME' via the sink '$LOG_SINK_NAME'."
+echo "Permissions granted. The log bucket '$LOG_BUCKET_NAME' is now receiving logs via the sink '$LOG_SINK_NAME'."
+
 echo "Script finished."
