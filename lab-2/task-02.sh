@@ -11,7 +11,7 @@ SINK_DESTINATION="bigquery.googleapis.com/projects/$PROJECT_ID/datasets/$BQ_DATA
 echo "Creating log sink '$LOG_SINK_NAME' to link bucket to BigQuery dataset..."
 
 gcloud logging sinks create "$LOG_SINK_NAME" "$SINK_DESTINATION" \
-  --source="$LOGGING_SOURCE" \
+  --log-filter='resource.type="k8s_container"' \
   --project="$PROJECT_ID" || { echo "ERROR: Failed to create log sink. Exiting."; exit 1; }
 
 echo "Log Sink '$LOG_SINK_NAME' created to route k8s_container logs to bucket '$LOG_BUCKET_NAME'."
