@@ -28,7 +28,7 @@ echo "GKE Cluster '$CLUSTER_NAME' created and registered to the fleet."
 
 echo ""
 echo "Next steps:"
-echo "1.  The script assumes an Anthos cluster on bare metal (cepf-bare-metal-cluster) already exists."
+echo "1.  The script assumes an Anthos cluster on bare metal (`cepf-bare-metal-cluster`) already exists."
 echo "2.  To log in to the Anthos cluster, use the Google Cloud Console. Navigate to"
 echo "    Kubernetes Clusters, select 'cepf-bare-metal-cluster', and use the 'Connect'"
 echo "    button to log in with your Google identity."
