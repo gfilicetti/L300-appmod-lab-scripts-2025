@@ -30,18 +30,13 @@ TBD
 **Note:** You must remember to inspect every script before running it and looking at the variables at the top to modify any that need to be changed due to your specific environment. It is also necessary to read comments in the scripts and look for any warnings.
 
 #### Enabling needed APIs
-Run this script:
+For each lab, run this script:
 
 ```shell
 ./_enable-apis.sh
 ```
 
-This will enable the following services:
-* Compute
-* Container
-* Cloud Resource Manager
-* Monitoring
-* Workstations
+This will enable any needed APIs
 
 ## Running Through the Labs Task by Task
 
@@ -63,4 +58,6 @@ These links were used to learn about the products and commands needed in each of
 <https://github.com/gfilicetti/L300-appmod-lab-scripts-2025>
 
 ### Reference material
-<>
+<https://cloud.google.com/logging/docs/buckets#gcloud>
+<https://cloud.google.com/sdk/gcloud/reference/logging/links/create>
+<https://cloud.google.com/sdk/gcloud/reference/logging/sinks/create#DESTINATION>
