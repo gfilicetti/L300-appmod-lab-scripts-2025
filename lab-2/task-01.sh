@@ -3,7 +3,7 @@
 # Variables
 PROJECT_ID=$(gcloud config get-value project)
 PROJECT_NUM=$(gcloud projects describe "$PROJECT_ID" --format="value(projectNumber)")
-REGION=us-central1
+REGION=us-east4
 LOG_BUCKET_NAME="cepf_log_bucket"
 BQ_DATASET_NAME="cepf_dataset"
 SINK_NAME="${LOG_BUCKET_NAME}_to_${BQ_DATASET_NAME}_sink"
