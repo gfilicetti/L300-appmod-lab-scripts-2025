@@ -6,7 +6,7 @@
 # --- Configuration ---
 # Ensure these variables are set correctly for your environment.
 PROJECT_ID=$(gcloud config get-value project)
-REGION="us-central1" # Region of the GKE Autopilot cluster and Cloud SQL instance
+REGION="us-west1" # Region of the GKE Autopilot cluster and Cloud SQL instance
 CLUSTER_NAME="cepf-autopilot-cluster"
 CLOUD_SQL_INSTANCE_NAME="bank-of-anthos-db"
 CLOUD_SQL_USER="boa-user"
