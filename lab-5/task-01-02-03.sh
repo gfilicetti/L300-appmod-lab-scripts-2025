@@ -73,5 +73,44 @@ kubectl apply -n $NAMESPACE -f ./kubernetes-manifests
 
 # Wait a few minutes for all the pods to be RUNNING. (Except for the two populate- Jobs. They should be marked 0/3 - Completed when they finish successfully.)
 
+echo "Bank of Anthos application deployment initiated. Waiting for services to be ready..."
+
+# 7. Wait for the frontend service to get an external IP
+echo "Waiting for frontend service to get an external IP address... (This may take a few minutes)"
+FRONTEND_IP=""
+while [ -z "$FRONTEND_IP" ]; do
+  echo "Checking for frontend IP..."
+  FRONTEND_IP=$(kubectl get service frontend -n default -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null)
+  [ -z "$FRONTEND_IP" ] && sleep 10
+done
+
+echo "Bank of Anthos frontend accessible at: http://$FRONTEND_IP"
+echo ""
+
+# 8. Validate the deployment
+echo "--- Validating Deployment ---"
+echo "Attempting to curl the frontend service..."
+curl_output=$(curl -s -o /dev/null -w "%{http_code}" http://$FRONTEND_IP)
+if [ "$curl_output" -eq 200 ]; then
+    echo "Frontend service is reachable (HTTP 200 OK)."
+else
+    echo "Warning: Frontend service returned HTTP $curl_output. It might still be initializing."
+fi
+
+echo ""
+echo "To validate the full deployment:"
+echo "1. Open your web browser and navigate to: http://$FRONTEND_IP"
+echo "2. Log in with the following credentials:"
+echo "   Username: testuser"
+echo "   Password: password"
+echo "3. Verify that you can see account balances and perform transactions."
+echo ""
+
+# --- Cleanup ---
+# Navigate back to the original directory before cleaning up the cloned repo
+cd ../../..
+echo "Cleaning up cloned Bank of Anthos repository..."
+rm -rf bank-of-anthos
+
 echo "Script finished."
 
