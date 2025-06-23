@@ -3,7 +3,6 @@
 # Variables
 PROJECT_ID=$(gcloud config get-value project)
 CLUSTER_NAME="cepf-gke-cluster"
-FLEET_HOST_PROJECT=$(gcloud config get-value project) 
 # Qwiklabs will give you a zone to use in the instructions once the environment is provisioned. Use that zone here.
 ZONE="us-west1-c" # use Zone given to you by qwiklabs
 
