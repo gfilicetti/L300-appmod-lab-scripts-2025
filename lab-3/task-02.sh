@@ -29,10 +29,12 @@ applySpecVersion: 1
 spec:
   configSync:
     enabled: true
-    repo: "$CONFIG_SYNC_REPO"
-    syncBranch: main
-    policyDir: "$POLICY_DIR"
-    secretType: none
+    sourceFormat: unstructured
+    git:
+      syncRepo: "$CONFIG_SYNC_REPO"
+      syncBranch: main
+      policyDir: "$POLICY_DIR"
+      secretType: none
   policyController:
     enabled: true
     # Allows for mutation of resources
