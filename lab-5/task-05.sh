@@ -22,17 +22,36 @@ gcloud container clusters get-credentials "$CLUSTER_NAME" \
     --region="$REGION" \
     --project="$PROJECT_ID" || { echo "ERROR: Failed to get cluster credentials. Exiting."; exit 1; }
 
-# 2. Update the loadgenerator deployment to increase user load
-echo "Updating the 'loadgenerator' deployment to increase simulated USERS from 5 to 100..."
-# We use 'kubectl set env' to directly modify the environment variable of the running deployment.
-# This is more robust and idiomatic than modifying the source YAML file and reapplying it,
-# which can cause errors if immutable fields like 'spec.selector' have changed between versions.
-kubectl set env deployment/loadgenerator USERS=100 -n default || { echo "ERROR: Failed to update loadgenerator deployment. Exiting."; exit 1; }
+# 2. Clone the Bank of Anthos repository if it doesn't exist
+echo "Cloning Bank of Anthos repository..."
+if [ -d "bank-of-anthos" ]; then
+    echo "Bank of Anthos directory already exists. Skipping clone."
+else
+    git clone https://github.com/GoogleCloudPlatform/bank-of-anthos.git || { echo "ERROR: Failed to clone repository. Exiting."; exit 1; }
+fi
+
+LOADGEN_MANIFEST="bank-of-anthos/kubernetes-manifests/loadgenerator.yaml"
+if [ ! -f "$LOADGEN_MANIFEST" ]; then
+    echo "ERROR: Expected manifest '$LOADGEN_MANIFEST' not found. Exiting."
+    exit 1
+fi
+
+# 3. Update the loadgenerator manifest to increase user load
+echo "Updating '$LOADGEN_MANIFEST' to increase simulated USERS from 5 to 100..."
+# Using a specific sed command to find the 'USERS' env var and replace the value on the next line.
+# This is safer than a simple string replacement. The -i'' is for macOS compatibility.
+sed -i'' -e '/- name: USERS/{n;s/value: "5"/value: "100"/;}' "$LOADGEN_MANIFEST"
+
+echo "Manifest updated. Applying changes to the cluster..."
+
+# 4. Apply the updated manifest to the cluster. NOTE: have to remove the deployment first, because we are changing an immutable field.
+kubectl delete -f "$LOADGEN_MANIFEST" || { echo "ERROR: Failed to delete the loadgenerator manifest. Exiting."; exit 1; }
+kubectl apply -f "$LOADGEN_MANIFEST" || { echo "ERROR: Failed to apply updated loadgenerator manifest. Exiting."; exit 1; }
 
 echo "Load generator has been updated to simulate 100 users."
 echo ""
 
-# 3. Guide user on how to observe the scaling
+# 5. Guide user on how to observe the scaling
 echo "--- Observing Autoscaling ---"
 echo "The increased load should trigger the Horizontal Pod Autoscalers for 'frontend' and 'userservice'."
 echo "You can monitor the HPA status and pod scaling with the following commands:"
