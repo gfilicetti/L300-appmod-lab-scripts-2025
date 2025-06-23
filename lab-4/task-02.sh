@@ -6,10 +6,11 @@
 # --- Configuration ---
 # Ensure these variables are set correctly for your environment.
 PROJECT_ID=$(gcloud config get-value project)
+# NOTE: Qwiklabs will give you a region to use in the instructions once the environment is provisioned. Use that region here.
 REGION1="us-central1" # Lab start region / location of the first cluster
-REGION2="us-east1"    # Location of the second cluster
+REGION2="us-west1"    # Location of the second cluster
 
-# IMPORTANT: Update with the names of your GKE clusters
+# NOTE: Update with the names of the pre-existing GKE clusters
 CLUSTER1_NAME="gke-cluster-1"
 CLUSTER2_NAME="gke-cluster-2"
 
@@ -125,6 +126,7 @@ echo "Deployment to the first cluster ($CLUSTER1_NAME) has started."
 echo "You can monitor the progress here:"
 echo "https://console.cloud.google.com/deploy/delivery-pipelines/$REGION1/$PIPELINE_NAME/releases?project=$PROJECT_ID"
 echo ""
+
 echo "Wait for the rollout to the first target to complete successfully."
 read -p "Once the first stage is complete, press [Enter] to promote the release to the second cluster..."
 

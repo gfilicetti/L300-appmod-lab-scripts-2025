@@ -7,8 +7,9 @@
 # Ensure these variables are set correctly for your environment.
 # These should be consistent with the values used in previous tasks.
 PROJECT_ID=$(gcloud config get-value project)
+# NOTE: Qwiklabs will give you a region to use in the instructions once the environment is provisioned. Use that region here.
 REGION1="us-central1" # Location of the first cluster (and config cluster)
-REGION2="us-east1"    # Location of the second cluster
+REGION2="us-west1"    # Location of the second cluster
 
 # IMPORTANT: Update with the names of your GKE clusters, consistent with task-02.sh
 CLUSTER1_NAME="gke-cluster-1"
@@ -193,6 +194,6 @@ curl -s http://$VIP/ | grep "cluster_name"
 echo ""
 
 # --- Cleanup ---
-rm services-cluster1.yaml services-cluster2.yaml gateway.yaml
+#rm services-cluster1.yaml services-cluster2.yaml gateway.yaml
 
 echo "Script finished."

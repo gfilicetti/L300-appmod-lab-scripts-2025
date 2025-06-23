@@ -7,8 +7,9 @@
 # Ensure these variables are set correctly for your environment.
 # These should be consistent with the values used in task-02.sh.
 PROJECT_ID=$(gcloud config get-value project)
+# NOTE: Qwiklabs will give you a region to use in the instructions once the environment is provisioned. Use that region here.
 REGION1="us-central1" # Location of the first cluster
-REGION2="us-east1"    # Location of the second cluster
+REGION2="us-west1"    # Location of the second cluster
 
 # IMPORTANT: Update with the names of your GKE clusters, consistent with task-02.sh
 CLUSTER1_NAME="gke-cluster-1"
