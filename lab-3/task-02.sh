@@ -11,7 +11,7 @@
 # --- Configuration ---
 PROJECT_ID=$(gcloud config get-value project)
 GKE_CLUSTER_NAME="cepf-gke-cluster"
-GKE_CLUSTER_ZONE="us-central1-a"
+GKE_CLUSTER_ZONE="us-west1-a"
 CONFIG_SYNC_REPO="https://github.com/GoogleCloudPlatform/anthos-config-management-samples"
 MEMBERSHIP_NAME="${GKE_CLUSTER_NAME}-membership"
 POLICY_DIR="quickstart/config-sync"
@@ -32,9 +32,7 @@ echo ""
 echo "Step 3: Enabling Policy Controller feature on the fleet membership..."
 gcloud beta container fleet policycontroller enable \
     --memberships="$MEMBERSHIP_NAME" \
-    --project="$PROJECT_ID" \
-    --install-template-library \
-    --referential-rules
+    --project="$PROJECT_ID"
 echo "Policy Controller enabled."
 echo ""
 
