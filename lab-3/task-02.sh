@@ -12,7 +12,7 @@
 PROJECT_ID=$(gcloud config get-value project)
 GKE_CLUSTER_NAME="cepf-gke-cluster"
 GKE_CLUSTER_ZONE="us-central1-a"
-CONFIG_SYNC_REPO="https://github.com/GoogleCloudPlatform/anthos-config-management-samples/tree/main/quickstart/config-sync"
+CONFIG_SYNC_REPO="https://github.com/GoogleCloudPlatform/anthos-config-management-samples"
 MEMBERSHIP_NAME="${GKE_CLUSTER_NAME}-membership"
 POLICY_DIR="policies"
 
@@ -22,8 +22,14 @@ gcloud services enable anthos.googleapis.com --project="$PROJECT_ID"
 echo "API enabled."
 echo ""
 
-# 2. Create the fleet configuration file for Config Sync and Policy Controller
-echo "Step 2: Creating fleet configuration file (config.yaml)..."
+# 2. Enable the Config Management feature on the fleet
+echo "Step 2: Enabling Config Management feature on the fleet..."
+gcloud beta container fleet config-management enable --project="$PROJECT_ID"
+echo "Config Management feature enabled."
+echo ""
+
+# 3. Create the fleet configuration file for Config Sync and Policy Controller
+echo "Step 3: Creating fleet configuration file (config.yaml)..."
 cat <<EOF > config.yaml
 applySpecVersion: 1
 spec:
@@ -45,22 +51,22 @@ echo "Configuration file created."
 echo ""
 
 # 3. Apply the configuration to the cluster's fleet membership
-echo "Step 3: Applying configuration to fleet membership '$MEMBERSHIP_NAME'..."
+echo "Step 4: Applying configuration to fleet membership '$MEMBERSHIP_NAME'..."
 echo "This may take several minutes..."
-gcloud alpha container fleet config-management apply \
+gcloud beta container fleet config-management apply \
     --membership="$MEMBERSHIP_NAME" \
     --config=config.yaml \
     --project="$PROJECT_ID" || { echo "ERROR: Failed to apply fleet configuration. Exiting."; exit 1; }
 echo "Fleet configuration applied."
 echo ""
 
-# 4. Get cluster credentials to use kubectl
-echo "Step 4: Getting credentials for '$GKE_CLUSTER_NAME' to verify..."
+# 5. Get cluster credentials to use kubectl
+echo "Step 5: Getting credentials for '$GKE_CLUSTER_NAME' to verify..."
 gcloud container clusters get-credentials "$GKE_CLUSTER_NAME" --zone="$GKE_CLUSTER_ZONE" --project="$PROJECT_ID"
 echo ""
 
-# 5. Verify that the 'hello' namespace from the repo is synced
-echo "Step 5: Verifying that the 'hello' namespace is synced by Config Sync..."
+# 6. Verify that the 'hello' namespace from the repo is synced
+echo "Step 6: Verifying that the 'hello' namespace is synced by Config Sync..."
 echo "Waiting for namespace 'hello' to be created..."
 until kubectl get namespace hello > /dev/null 2>&1; do
     echo -n "."
@@ -71,8 +77,8 @@ echo "SUCCESS: Namespace 'hello' found."
 kubectl get all -n hello
 echo ""
 
-# 6. Test the Policy Controller constraint (no-ext-services.yaml)
-echo "Step 6: Testing the Policy Controller constraint that blocks external services..."
+# 7. Test the Policy Controller constraint (no-ext-services.yaml)
+echo "Step 7: Testing the Policy Controller constraint that blocks external services..."
 # The sample repo includes a constraint that prevents services of type LoadBalancer.
 # We will attempt to create one to verify the policy is enforced.
 
@@ -105,8 +111,8 @@ else
 fi
 echo ""
 
-# 7. Cleanup local files
-echo "Step 7: Cleaning up local configuration files..."
+# 8. Cleanup local files
+echo "Step 8: Cleaning up local configuration files..."
 rm config.yaml service.yaml
 echo "Cleanup complete."
 echo ""
