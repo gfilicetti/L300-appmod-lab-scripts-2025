@@ -14,7 +14,7 @@ GKE_CLUSTER_NAME="cepf-gke-cluster"
 GKE_CLUSTER_ZONE="us-central1-a"
 CONFIG_SYNC_REPO="https://github.com/GoogleCloudPlatform/anthos-config-management-samples"
 MEMBERSHIP_NAME="${GKE_CLUSTER_NAME}-membership"
-POLICY_DIR="policies"
+POLICY_DIR="quickstart/config-sync"
 
 # 1. Enable required APIs
 echo "Step 1: Enabling Anthos API..."
@@ -26,6 +26,16 @@ echo ""
 echo "Step 2: Enabling Config Management feature on the fleet..."
 gcloud beta container fleet config-management enable --project="$PROJECT_ID"
 echo "Config Management feature enabled."
+echo ""
+
+# 3. Enable Policy Controller on the fleet membership
+echo "Step 3: Enabling Policy Controller feature on the fleet membership..."
+gcloud beta container fleet policycontroller enable \
+    --memberships="$MEMBERSHIP_NAME" \
+    --project="$PROJECT_ID" \
+    --install-template-library \
+    --referential-rules
+echo "Policy Controller enabled."
 echo ""
 
 # 3. Create the fleet configuration file for Config Sync and Policy Controller
@@ -40,12 +50,6 @@ spec:
     syncBranch: main
     secretType: none
     policyDir: $POLICY_DIR
-  policyController:
-    enabled: true
-    # Allows for mutation of resources
-    referentialRulesEnabled: true
-    # Installs a library of common policy templates
-    templateLibraryInstalled: true
 EOF
 echo "Configuration file created."
 echo ""
