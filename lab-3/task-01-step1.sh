@@ -9,15 +9,47 @@ ZONE="us-west1-c" # use Zone given to you by qwiklabs
 
 # 1. Create the Enterprise mode GKE cluster
 echo "Creating Enterprise GKE cluster: $CLUSTER_NAME"
-gcloud container clusters create $CLUSTER_NAME \
-    --zone=$ZONE \
-    --cluster-version=latest \
-    --release-channel=regular \
-    --machine-type=e2-standard-4 \
-    --num-nodes=3 \
-    --tier=enterprise \
-    --workload-pool=$PROJECT_ID.svc.id.goog \
-    --project=$PROJECT_ID
+# gcloud container clusters create $CLUSTER_NAME \
+#     --zone=$ZONE \
+#     --cluster-version=latest \
+#     --release-channel=regular \
+#     --machine-type=e2-standard-4 \
+#     --num-nodes=3 \
+#     --tier=enterprise \
+#     --workload-pool=$PROJECT_ID.svc.id.goog \
+#     --project=$PROJECT_ID
+gcloud beta container clusters create $CLUSTER_NAME \
+    --zone $ZONE \
+    --tier "enterprise" \
+    --no-enable-basic-auth \
+    --cluster-version "1.32.4-gke.1415000" \
+    --release-channel "regular" \
+    --machine-type "e2-medium" \
+    --image-type "COS_CONTAINERD" \
+    --disk-type "pd-balanced" \
+    --disk-size "100" \
+    --metadata disable-legacy-endpoints=true \
+    --num-nodes "3" \
+    --enable-ip-alias \
+    --no-enable-intra-node-visibility \
+    --default-max-pods-per-node "110" \
+    --enable-ip-access \
+    --security-posture=standard \
+    --workload-vulnerability-scanning=enterprise \
+    --no-enable-google-cloud-access \
+    --addons HorizontalPodAutoscaling,HttpLoadBalancing,GcePersistentDiskCsiDriver \
+    --enable-autoupgrade \
+    --enable-autorepair \
+    --max-surge-upgrade 1 \
+    --max-unavailable-upgrade 0 \
+    --binauthz-evaluation-mode=DISABLED \
+    --enable-managed-prometheus \
+    --workload-pool "$PROJECT_ID.svc.id.goog" \
+    --enable-shielded-nodes \
+    --shielded-integrity-monitoring \
+    --no-shielded-secure-boot \
+    --fleet-project=$PROJECT_ID \
+    --project $PROJECT_ID 
 
 # 2. Register the GKE cluster to the fleet
 echo "Registering GKE cluster to fleet: $CLUSTER_NAME"
