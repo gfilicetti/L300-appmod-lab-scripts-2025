@@ -63,8 +63,4 @@ echo "  kubectl get pods -n default -w"
 echo ""
 echo "It may take a few minutes for the metrics to propagate and for new pods to be scheduled and started."
 
-# --- Cleanup ---
-echo "Cleaning up cloned Bank of Anthos repository..."
-rm -rf bank-of-anthos
-
 echo "Script finished."
