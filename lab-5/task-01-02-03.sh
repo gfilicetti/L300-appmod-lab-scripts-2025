@@ -106,11 +106,5 @@ echo "   Password: password"
 echo "3. Verify that you can see account balances and perform transactions."
 echo ""
 
-# --- Cleanup ---
-# Navigate back to the original directory before cleaning up the cloned repo
-cd ../../..
-echo "Cleaning up cloned Bank of Anthos repository..."
-rm -rf bank-of-anthos
-
 echo "Script finished."
 
