@@ -9,15 +9,6 @@ ZONE="us-west1-c" # use Zone given to you by qwiklabs
 
 # 1. Create the Enterprise mode GKE cluster
 echo "Creating Enterprise GKE cluster: $CLUSTER_NAME"
-# gcloud container clusters create $CLUSTER_NAME \
-#     --zone=$ZONE \
-#     --cluster-version=latest \
-#     --release-channel=regular \
-#     --machine-type=e2-standard-4 \
-#     --num-nodes=3 \
-#     --tier=enterprise \
-#     --workload-pool=$PROJECT_ID.svc.id.goog \
-#     --project=$PROJECT_ID
 gcloud beta container clusters create $CLUSTER_NAME \
     --zone $ZONE \
     --tier "enterprise" \
@@ -50,12 +41,6 @@ gcloud beta container clusters create $CLUSTER_NAME \
     --no-shielded-secure-boot \
     --fleet-project=$PROJECT_ID \
     --project $PROJECT_ID 
-
-# 2. Register the GKE cluster to the fleet
-echo "Registering GKE cluster to fleet: $CLUSTER_NAME"
-gcloud container fleet memberships register $CLUSTER_NAME-membership \
-    --gke-uri=https://container.googleapis.com/v1/projects/$PROJECT_ID/zones/$ZONE/clusters/$CLUSTER_NAME \
-    --project=$PROJECT_ID
 
 echo "GKE Cluster '$CLUSTER_NAME' created and registered to the fleet."
 
