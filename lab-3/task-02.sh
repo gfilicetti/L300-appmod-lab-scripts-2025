@@ -12,9 +12,9 @@
 PROJECT_ID=$(gcloud config get-value project)
 GKE_CLUSTER_NAME="cepf-gke-cluster"
 GKE_CLUSTER_ZONE="us-central1-a"
-CONFIG_SYNC_REPO="https://github.com/GoogleCloudPlatform/anthos-config-management-samples/tree/main/quickstart/config-sync"
+CONFIG_SYNC_REPO="https://github.com/GoogleCloudPlatform/anthos-config-management-samples"
 MEMBERSHIP_NAME="${GKE_CLUSTER_NAME}-membership"
-POLICY_DIR="policies"
+POLICY_DIR="quickstart/config-sync"
 
 # 1. Enable required APIs
 echo "Step 1: Enabling Anthos API..."
@@ -29,12 +29,10 @@ applySpecVersion: 1
 spec:
   configSync:
     enabled: true
-    sourceFormat: unstructured
-    git:
-      repo: $CONFIG_SYNC_REPO
-      branch: main
-      dir: "$POLICY_DIR"
-      secretType: none
+    repo: "$CONFIG_SYNC_REPO"
+    syncBranch: main
+    policyDir: "$POLICY_DIR"
+    secretType: none
   policyController:
     enabled: true
     # Allows for mutation of resources
@@ -48,7 +46,7 @@ echo ""
 # 3. Apply the configuration to the cluster's fleet membership
 echo "Step 3: Applying configuration to fleet membership '$MEMBERSHIP_NAME'..."
 echo "This may take several minutes..."
-gcloud alpha container fleet config-management apply \
+gcloud beta container fleet config-management apply \
     --membership="$MEMBERSHIP_NAME" \
     --config=config.yaml \
     --project="$PROJECT_ID" || { echo "ERROR: Failed to apply fleet configuration. Exiting."; exit 1; }
