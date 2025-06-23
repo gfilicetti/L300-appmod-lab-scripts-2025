@@ -51,8 +51,8 @@ fi
 cd "$BOA_DIR" || { echo "ERROR: Failed to change directory to $BOA_DIR. Exiting."; exit 1; }
 
 # run workload identity setup
-# echo "Running Workload Identity Setup..."
-# ./setup_workload_identity.sh
+echo "Running Workload Identity Setup..."
+./setup_workload_identity.sh
 
 # create cloud sql instance
 echo "Running Cloud SQL Instance Setup..."
