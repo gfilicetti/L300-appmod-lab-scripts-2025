@@ -21,6 +21,7 @@ echo "This operation can take several minutes to complete."
 gcloud sql instances create "$INSTANCE_NAME" \
     --database-version="$DB_VERSION" \
     --region="$REGION" \
+    --tier=db-g1-small \
     --project="$PROJECT_ID"
 
 # Check the exit code of the gcloud command to confirm success
