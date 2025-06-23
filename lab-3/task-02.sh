@@ -48,7 +48,7 @@ echo ""
 # 3. Apply the configuration to the cluster's fleet membership
 echo "Step 3: Applying configuration to fleet membership '$MEMBERSHIP_NAME'..."
 echo "This may take several minutes..."
-gcloud container fleet config-management apply \
+gcloud alpha container fleet config-management apply \
     --membership="$MEMBERSHIP_NAME" \
     --config=config.yaml \
     --project="$PROJECT_ID" || { echo "ERROR: Failed to apply fleet configuration. Exiting."; exit 1; }
