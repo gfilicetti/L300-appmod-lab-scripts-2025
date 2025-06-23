@@ -94,7 +94,7 @@ echo "If it lists your project's GCS buckets, Workload Identity is working!"
 echo ""
 
 # --- Cleanup Instructions ---
-echo "--- Cleanup Instructions ---"
+echo "--- Cleanup  Instructions ---"
 echo "To clean up the resources created by this script, run the following commands:"
 echo "1. Delete the test pod:"
 echo "   kubectl delete pod workload-identity-test-pod -n ${KSA_NAMESPACE}"
