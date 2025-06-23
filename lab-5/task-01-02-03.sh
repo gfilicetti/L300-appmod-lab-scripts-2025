@@ -7,7 +7,7 @@
 export PROJECT_ID=$(gcloud config get-value project)
 export CLUSTER_NAME="cepf-autopilot-cluster"
 # Qwiklabs will give you a region to use in the instructions once the environment is provisioned. Use that region here.
-export REGION="us-west1" # use Region given to you by qwiklabs
+export REGION="us-central1" # use Region given to you by qwiklabs
 export DB_REGION=$REGION
 export NAMESPACE="default"
 
