@@ -6,7 +6,7 @@
 # --- Configuration ---
 PROJECT_ID=$(gcloud config get-value project)
 CLUSTER_NAME="cepf-gke-cluster"
-ZONE="us-west1-a" # Ensure this matches the zone used in lab-3/task-01.sh
+ZONE="us-west1-c" # Ensure this matches the zone used in lab-3/task-01-step1.sh
 
 # Workload Identity specific variables
 GSA_NAME="my-workload-identity-gsa"

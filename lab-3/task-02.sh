@@ -11,7 +11,7 @@
 # --- Configuration ---
 PROJECT_ID=$(gcloud config get-value project)
 GKE_CLUSTER_NAME="cepf-gke-cluster"
-GKE_CLUSTER_ZONE="us-west1-a"
+GKE_CLUSTER_ZONE="us-west1-c" # Ensure this matches the zone used in lab-3/task-01-step1.sh
 CONFIG_SYNC_REPO="https://github.com/GoogleCloudPlatform/anthos-config-management-samples"
 MEMBERSHIP_NAME="${GKE_CLUSTER_NAME}-membership"
 POLICY_DIR="quickstart/config-sync"
