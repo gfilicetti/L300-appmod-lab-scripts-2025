@@ -84,7 +84,7 @@ echo "Kubernetes secrets created."
 
 # 6. Deploy Bank of Anthos application with Cloud SQL configuration using Kustomize
 echo "Deploying Bank of Anthos application with Cloud SQL backend..."
-kubectl apply -k . || { echo "ERROR: Failed to deploy Bank of Anthos. Exiting."; exit 1; }
+kubectl apply -k ./bank-of-anthos || { echo "ERROR: Failed to deploy Bank of Anthos. Exiting."; exit 1; }
 
 echo "Bank of Anthos application deployment initiated. Waiting for services to be ready..."
 
