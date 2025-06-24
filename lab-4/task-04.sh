@@ -12,8 +12,8 @@ REGION1="us-central1" # Location of the first cluster (and config cluster)
 REGION2="us-west1"    # Location of the second cluster
 
 # IMPORTANT: Update with the names of your GKE clusters, consistent with task-02.sh
-CLUSTER1_NAME="gke-cluster-1"
-CLUSTER2_NAME="gke-cluster-2"
+CLUSTER1_NAME="cepf-gke-cluster-1"
+CLUSTER2_NAME="cepf-gke-cluster-2"
 
 # --- Script Execution ---
 

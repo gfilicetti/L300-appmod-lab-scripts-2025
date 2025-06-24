@@ -12,12 +12,12 @@ REGION1="us-central1" # Location of the first cluster
 REGION2="us-west1"    # Location of the second cluster
 
 # IMPORTANT: Update with the names of your GKE clusters, consistent with task-02.sh
-CLUSTER1_NAME="gke-cluster-1"
-CLUSTER2_NAME="gke-cluster-2"
+CLUSTER1_NAME="cepf-gke-cluster-1"
+CLUSTER2_NAME="cepf-gke-cluster-2"
 
 # Fleet membership names as specified in the task
-MEMBERSHIP1_NAME="cepf-gke-cluster-1"
-MEMBERSHIP2_NAME="cepf-gke-cluster-2"
+MEMBERSHIP1_NAME="${CLUSTER1_NAME}-membership"
+MEMBERSHIP2_NAME="${CLUSTER2_NAME}-membership"
 
 # The fleet host project is typically the same as the project ID
 FLEET_HOST_PROJECT=$PROJECT_ID

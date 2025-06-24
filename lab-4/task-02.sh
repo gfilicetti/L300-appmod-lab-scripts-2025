@@ -11,8 +11,8 @@ REGION1="us-central1" # Lab start region / location of the first cluster
 REGION2="us-west1"    # Location of the second cluster
 
 # NOTE: Update with the names of the pre-existing GKE clusters
-CLUSTER1_NAME="gke-cluster-1"
-CLUSTER2_NAME="gke-cluster-2"
+CLUSTER1_NAME="cepf-gke-cluster-1"
+CLUSTER2_NAME="cepf-gke-cluster-2"
 
 # Artifact Registry and Image details (from previous step)
 REPO_NAME="cepf-app-mod-repo"
