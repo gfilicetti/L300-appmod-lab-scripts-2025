@@ -8,8 +8,8 @@
 # These should be consistent with the values used in task-02.sh.
 PROJECT_ID=$(gcloud config get-value project)
 # NOTE: Qwiklabs will give you a region to use in the instructions once the environment is provisioned. Use that region here.
-REGION1="us-east4" # Lab start region / location of the first cluster
-REGION2="europe-west4"    # Location of the second cluster
+ZONE1="us-east4-c" # Lab start region / location of the first cluster
+ZONE2="europe-west4-b"    # Location of the second cluster
 
 # IMPORTANT: Update with the names of your GKE clusters, consistent with task-02.sh
 CLUSTER1_NAME="cepf-gke-cluster-1"
@@ -27,18 +27,6 @@ FLEET_HOST_PROJECT=$PROJECT_ID
 echo "--- Task 3: Enable Multi-Cluster Gateways ---"
 echo ""
 
-# 1. Pre-requisite: Enable Fleet and Gateway APIs for the project
-# This ensures the project is configured to act as a fleet host, effectively
-# "creating" the fleet if it hasn't been used before.
-echo "Enabling required APIs for Fleet and Multi-Cluster Gateways..."
-gcloud services enable \
-    gkehub.googleapis.com \
-    multiclusteringress.googleapis.com \
-    multiclusterservicediscovery.googleapis.com \
-    gateway.googleapis.com \
-    --project=$PROJECT_ID
-echo "APIs enabled."
-
 # 2. Pre-requisite: Enable Gateway API on GKE clusters
 # This is a crucial step as Fleet Ingress relies on the Gateway API.
 # You must install the Gateway API CRDs on each cluster that will participate
@@ -46,8 +34,8 @@ echo "APIs enabled."
 echo "IMPORTANT: Before proceeding, ensure the Gateway API is enabled on your GKE clusters."
 echo "This typically involves installing the Gateway API CRDs on each cluster."
 echo "For example, for GKE clusters, you would run (check for the latest stable version):"
-echo "  kubectl --context=gke_${PROJECT_ID}_${REGION1}_${CLUSTER1_NAME} apply -k https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.0.0/standard-install.yaml"
-echo "  kubectl --context=gke_${PROJECT_ID}_${REGION2}_${CLUSTER2_NAME} apply -k https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.0.0/standard-install.yaml"
+echo "  kubectl --context=gke_${PROJECT_ID}_${ZONE1}_${CLUSTER1_NAME} apply -k https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.0.0/standard-install.yaml"
+echo "  kubectl --context=gke_${PROJECT_ID}_${ZONE2}_${CLUSTER2_NAME} apply -k https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.0.0/standard-install.yaml"
 echo ""
 echo "Wait for the Gateway API components to be ready on both clusters before continuing."
 read -p "Press [Enter] to continue after ensuring Gateway API is enabled on your clusters..."
@@ -56,13 +44,13 @@ read -p "Press [Enter] to continue after ensuring Gateway API is enabled on your
 # Registering clusters to a fleet allows them to be managed centrally and enables fleet features.
 echo "Registering GKE cluster '$CLUSTER1_NAME' to fleet with membership '$MEMBERSHIP1_NAME'..."
 gcloud container fleet memberships register $MEMBERSHIP1_NAME \
-    --gke-cluster=projects/$PROJECT_ID/locations/$REGION1/clusters/$CLUSTER1_NAME \
+    --gke-cluster=projects/$PROJECT_ID/locations/$ZONE1/clusters/$CLUSTER1_NAME \
     --enable-workload-identity \
     --project=$PROJECT_ID || { echo "ERROR: Failed to register $CLUSTER1_NAME. Exiting."; exit 1; }
 
 echo "Registering GKE cluster '$CLUSTER2_NAME' to fleet with membership '$MEMBERS2_NAME'..."
 gcloud container fleet memberships register $MEMBERS2_NAME \
-    --gke-cluster=projects/$PROJECT_ID/locations/$REGION2/clusters/$CLUSTER2_NAME \
+    --gke-cluster=projects/$PROJECT_ID/locations/$ZONE2/clusters/$CLUSTER2_NAME \
     --enable-workload-identity \
     --project=$PROJECT_ID || { echo "ERROR: Failed to register $CLUSTER2_NAME. Exiting."; exit 1; }
 
