@@ -66,10 +66,11 @@ apiVersion: skaffold/v4beta7
 kind: Config
 metadata:
   name: cepf-gke-app
-deploy:
-  kubectl:
-    manifests:
+manifests:
+  rawYaml:
     - k8s-manifest.yaml
+deploy:
+  kubectl: {}
 EOF
 
 # 3. Create Cloud Deploy pipeline definition (delivery-pipeline.yaml)
