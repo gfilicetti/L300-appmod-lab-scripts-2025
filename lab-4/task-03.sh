@@ -41,7 +41,7 @@ echo "Wait for the Gateway API components to be ready on both clusters before co
 read -p "Press [Enter] to continue after ensuring Gateway API is enabled on your clusters..."
 
 # 2. Create a fleet as we probably won't have one:
-gcloud container fleet create --display-name=$PROJECT_ID-fleet --project=$PROJECT_ID || { echo "ERROR: Failed to create fleet. Exiting."; exit 1; }
+gcloud container fleet create --display-name=fleet --project=$PROJECT_ID || { echo "ERROR: Failed to create fleet. Exiting."; exit 1; }
 
 # 3. Register both clusters to the fleet
 # Registering clusters to a fleet allows them to be managed centrally and enables fleet features.
