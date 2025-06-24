@@ -7,8 +7,8 @@
 # Ensure these variables are set correctly for your environment.
 PROJECT_ID=$(gcloud config get-value project)
 # NOTE: Qwiklabs will give you a region to use in the instructions once the environment is provisioned. Use that region here.
-REGION1="us-central1" # Lab start region / location of the first cluster
-REGION2="us-west1"    # Location of the second cluster
+REGION1="us-east4" # Lab start region / location of the first cluster
+REGION2="europe-west4"    # Location of the second cluster
 
 # NOTE: Update with the names of the pre-existing GKE clusters
 CLUSTER1_NAME="cepf-gke-cluster-1"
@@ -66,17 +66,14 @@ apiVersion: skaffold/v4beta7
 kind: Config
 metadata:
   name: cepf-gke-app
-profiles:
-- name: dev
-  manifests:
-    rawYaml:
-    - k8s-manifest.yaml
-- name: prod
-  manifests:
-    rawYaml:
+manifests:
+  rawYaml:
     - k8s-manifest.yaml
 deploy:
   kubectl: {}
+profiles:
+- name: dev
+- name: prod
 EOF
 
 # 3. Create Cloud Deploy pipeline definition (delivery-pipeline.yaml)
