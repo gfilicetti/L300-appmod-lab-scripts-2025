@@ -68,15 +68,15 @@ metadata:
   name: cepf-gke-app
 profiles:
 - name: dev
-  deploy: 
-    kubectl:
-      manifests:
-        - k8s-manifest.yaml
+  manifests:
+    rawYaml:
+    - k8s-manifest.yaml
 - name: prod
-  deploy: 
-    kubectl:
-      manifests:
-        - k8s-manifest.yaml
+  manifests:
+    rawYaml:
+    - k8s-manifest.yaml
+deploy:
+  kubectl: {}
 EOF
 
 # 3. Create Cloud Deploy pipeline definition (delivery-pipeline.yaml)
