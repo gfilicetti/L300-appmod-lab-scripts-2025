@@ -27,7 +27,19 @@ FLEET_HOST_PROJECT=$PROJECT_ID
 echo "--- Task 3: Enable Multi-Cluster Gateways ---"
 echo ""
 
-# 0. Pre-requisite: Enable Gateway API on GKE clusters
+# 1. Pre-requisite: Enable Fleet and Gateway APIs for the project
+# This ensures the project is configured to act as a fleet host, effectively
+# "creating" the fleet if it hasn't been used before.
+echo "Enabling required APIs for Fleet and Multi-Cluster Gateways..."
+gcloud services enable \
+    gkehub.googleapis.com \
+    multiclusteringress.googleapis.com \
+    multiclusterservicediscovery.googleapis.com \
+    gateway.googleapis.com \
+    --project=$PROJECT_ID
+echo "APIs enabled."
+
+# 2. Pre-requisite: Enable Gateway API on GKE clusters
 # This is a crucial step as Fleet Ingress relies on the Gateway API.
 # You must install the Gateway API CRDs on each cluster that will participate
 # in the multi-cluster gateway.
@@ -40,7 +52,7 @@ echo ""
 echo "Wait for the Gateway API components to be ready on both clusters before continuing."
 read -p "Press [Enter] to continue after ensuring Gateway API is enabled on your clusters..."
 
-# 1. Register both clusters to the fleet
+# 3. Register both clusters to the fleet
 # Registering clusters to a fleet allows them to be managed centrally and enables fleet features.
 echo "Registering GKE cluster '$CLUSTER1_NAME' to fleet with membership '$MEMBERSHIP1_NAME'..."
 gcloud container fleet memberships register $MEMBERSHIP1_NAME \
@@ -56,13 +68,13 @@ gcloud container fleet memberships register $MEMBERS2_NAME \
 
 echo "Clusters registered to the fleet."
 
-# 2. Enable multi-cluster services (MCS)
+# 4. Enable multi-cluster services (MCS)
 # MCS allows services to be discovered and accessed across clusters in the fleet.
 echo "Enabling multi-cluster services for the fleet..."
 gcloud container fleet ingress enable-multicluster-services --project=$PROJECT_ID || { echo "ERROR: Failed to enable multi-cluster services. Exiting."; exit 1; }
 echo "Multi-cluster services enabled."
 
-# 3. Enable the multi-cluster gateway controller (Fleet Ingress)
+# 5. Enable the multi-cluster gateway controller (Fleet Ingress)
 # This deploys the Fleet Ingress controller to the specified config-membership cluster.
 echo "Enabling multi-cluster gateway controller (Fleet Ingress) with '$MEMBERSHIP1_NAME' as config membership..."
 gcloud container fleet ingress enable \
