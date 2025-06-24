@@ -8,9 +8,9 @@
 PROJECT_ID=$(gcloud config get-value project)
 # NOTE: Qwiklabs will give you a region to use in the instructions once the environment is provisioned. Use that region here.
 REGION1="us-east4" # Lab start region / location of the first cluster
-ZONE1="$REGION1-c"
+ZONE1="$REGION1-c" # the zone for gke cluster 1
 REGION2="europe-west4"    # Location of the second cluster
-ZONE2="$REGION2-b"
+ZONE2="$REGION2-b" # the zone for gke cluster 2
 
 # NOTE: Update with the names of the pre-existing GKE clusters
 CLUSTER1_NAME="cepf-gke-cluster-1"
