@@ -8,7 +8,9 @@
 PROJECT_ID=$(gcloud config get-value project)
 # NOTE: Qwiklabs will give you a region to use in the instructions once the environment is provisioned. Use that region here.
 REGION1="us-east4" # Lab start region / location of the first cluster
+ZONE1="$REGION1-c"
 REGION2="europe-west4"    # Location of the second cluster
+ZONE2="$REGION2-b"
 
 # NOTE: Update with the names of the pre-existing GKE clusters
 CLUSTER1_NAME="cepf-gke-cluster-1"
@@ -98,7 +100,7 @@ metadata:
   name: $CLUSTER1_NAME-target
 description: "GKE Cluster 1 in $REGION1"
 gke:
-  cluster: projects/$PROJECT_ID/locations/$REGION1/clusters/$CLUSTER1_NAME
+  cluster: projects/$PROJECT_ID/locations/$ZONE1/clusters/$CLUSTER1_NAME
 ---
 apiVersion: deploy.cloud.google.com/v1
 kind: Target
@@ -106,7 +108,7 @@ metadata:
   name: $CLUSTER2_NAME-target
 description: "GKE Cluster 2 in $REGION2"
 gke:
-  cluster: projects/$PROJECT_ID/locations/$REGION2/clusters/$CLUSTER2_NAME
+  cluster: projects/$PROJECT_ID/locations/$ZONE2/clusters/$CLUSTER2_NAME
 EOF
 
 # 4. Apply the delivery pipeline to Google Cloud Deploy
