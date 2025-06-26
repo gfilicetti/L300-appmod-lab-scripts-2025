@@ -54,8 +54,8 @@ gcloud container fleet memberships register $MEMBERSHIP1_NAME \
     --enable-workload-identity \
     --project=$PROJECT_ID || { echo "ERROR: Failed to register $CLUSTER1_NAME. Exiting."; exit 1; }
 
-echo "Registering GKE cluster '$CLUSTER2_NAME' to fleet with membership '$MEMBERS2_NAME'..."
-gcloud container fleet memberships register $MEMBERS2_NAME \
+echo "Registering GKE cluster '$CLUSTER2_NAME' to fleet with membership '$MEMBERSHIP2_NAME'..."
+gcloud container fleet memberships register $MEMBERSHIP2_NAME \
     --gke-uri=https://container.googleapis.com/v1/projects/$PROJECT_ID/locations/$ZONE2/clusters/$CLUSTER2_NAME \
     --enable-workload-identity \
     --project=$PROJECT_ID || { echo "ERROR: Failed to register $CLUSTER2_NAME. Exiting."; exit 1; }
