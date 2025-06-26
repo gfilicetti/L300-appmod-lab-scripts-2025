@@ -8,8 +8,10 @@
 # These should be consistent with the values used in task-02.sh.
 PROJECT_ID=$(gcloud config get-value project)
 # NOTE: Qwiklabs will give you a region to use in the instructions once the environment is provisioned. Use that region here.
-ZONE1="us-west1-a" # Lab start region / location of the first cluster
-ZONE2="europe-west4-a"    # Location of the second cluster
+REGION1="us-west1" # Lab start region / location of the first cluster
+ZONE1="$REGION1-a" # the zone for gke cluster 1
+REGION2="europe-west4"    # Location of the second cluster
+ZONE2="$REGION2-a" # the zone for gke cluster 2
 
 # IMPORTANT: Update with the names of your GKE clusters, consistent with task-02.sh
 CLUSTER1_NAME="cepf-gke-cluster-1"
@@ -39,10 +41,10 @@ echo ""
 # This is a crucial step as Fleet Ingress relies on the Gateway API.
 echo "Installing Gateway API CRDs on both clusters..."
 gcloud container clusters get-credentials "${CLUSTER1_NAME}" --zone "${ZONE1}" --project "${PROJECT_ID}"
-kubectl apply -k "https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.0.0/standard-install.yaml"
+kubectl apply -f "https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.0.0/standard-install.yaml"
  
 gcloud container clusters get-credentials "${CLUSTER2_NAME}" --zone "${ZONE2}" --project "${PROJECT_ID}"
-kubectl apply -k "https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.0.0/standard-install.yaml"
+kubectl apply -f "https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.0.0/standard-install.yaml"
  
 echo "Gateway API CRDs installed."
  
@@ -73,6 +75,7 @@ echo "Multi-cluster services enabled."
 echo "Enabling multi-cluster gateway controller (Fleet Ingress) with '$MEMBERSHIP1_NAME' as config membership..."
 gcloud container fleet ingress enable \
     --config-membership=$MEMBERSHIP1_NAME \
+    --location=$REGION1 \
     --project=$PROJECT_ID || { echo "ERROR: Failed to enable multi-cluster gateway controller. Exiting."; exit 1; }
 echo "Multi-cluster gateway controller enabled."
 
