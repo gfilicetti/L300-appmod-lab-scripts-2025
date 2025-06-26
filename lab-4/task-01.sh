@@ -3,7 +3,7 @@
 # Variables
 PROJECT_ID=$(gcloud config get-value project)
 # NOTE: Qwiklabs will give you a region to use in the instructions once the environment is provisioned. Use that region here.
-REGION="us-east4" # Lab start region / location of the first cluster
+REGION="us-west1" # Lab start region / location of the first cluster
 REPO_NAME="cepf-app-mod-repo"
 IMAGE_NAME="whereami-app"
 GIT_REPO="https://github.com/GoogleCloudPlatform/kubernetes-engine-samples.git"
