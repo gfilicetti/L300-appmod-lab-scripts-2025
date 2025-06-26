@@ -27,17 +27,6 @@ FLEET_HOST_PROJECT=$PROJECT_ID
 echo "--- Task 3: Enable Multi-Cluster Gateways ---"
 echo ""
 
-# 1. Pre-requisite: Enable Fleet and Gateway APIs for the project
-# This ensures the project is configured to act as a fleet host.
-echo "Enabling required APIs for Fleet and Multi-Cluster Gateways..."
-gcloud services enable \
-    gkehub.googleapis.com \
-    multiclusteringress.googleapis.com \
-    multiclusterservicediscovery.googleapis.com \
-    --project=$PROJECT_ID
-echo "APIs enabled."
-echo ""
-
 # 2. Pre-requisite: Enable Workload Identity on GKE clusters
 # This is required for fleet registration and secure inter-service communication.
 echo "Enabling Workload Identity on both clusters..."
