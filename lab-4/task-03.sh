@@ -79,13 +79,6 @@ gcloud container fleet ingress enable \
     --project=$PROJECT_ID || { echo "ERROR: Failed to enable multi-cluster gateway controller. Exiting."; exit 1; }
 echo "Multi-cluster gateway controller enabled."
 
-echo "Enabling multi-cluster gateway controller (Fleet Ingress) with '$MEMBERSHIP2_NAME' as config membership..."
-gcloud container fleet ingress enable \
-    --config-membership=$MEMBERSHIP2_NAME \
-    --location=$REGION2 \
-    --project=$PROJECT_ID || { echo "ERROR: Failed to enable multi-cluster gateway controller. Exiting."; exit 1; }
-echo "Multi-cluster gateway controller enabled."
-
 echo ""
 echo "Multi-cluster gateways and services setup complete."
 echo "It may take some time for the Fleet Ingress controller to deploy and become ready."
