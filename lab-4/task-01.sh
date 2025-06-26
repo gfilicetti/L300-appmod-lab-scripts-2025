@@ -11,6 +11,12 @@ GIT_DIR="kubernetes-engine-samples/quickstarts/whereami"
 
 # Task 1: Build a container application with Cloud Build
 
+# 0. Create a Fleet
+echo "Creating a fleet for the project..."
+# This command creates a fleet with the display name 'fleet' if one doesn't exist.
+# '|| true' ensures the script doesn't fail if the fleet has already been created.
+gcloud container fleet create --display-name="fleet" --project=$PROJECT_ID || true
+
 # 1. Clone the repository
 echo "Cloning the repository..."
 git clone $GIT_REPO
