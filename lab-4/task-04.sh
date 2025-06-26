@@ -9,7 +9,9 @@
 PROJECT_ID=$(gcloud config get-value project)
 # NOTE: Qwiklabs will give you a region to use in the instructions once the environment is provisioned. Use that region here.
 REGION1="us-west1" # Lab start region / location of the first cluster
+ZONE1="$REGION1-a" # the zone for gke cluster 1
 REGION2="europe-west4"    # Location of the second cluster
+ZONE2="$REGION2-a" # the zone for gke cluster 2
 
 # IMPORTANT: Update with the names of your GKE clusters, consistent with task-02.sh
 CLUSTER1_NAME="cepf-gke-cluster-1"
@@ -108,10 +110,10 @@ metadata:
 EOF
 
 echo "Applying service configurations to clusters..."
-gcloud container clusters get-credentials "${CLUSTER1_NAME}" --region "${REGION1}" --project "${PROJECT_ID}"
+gcloud container clusters get-credentials "${CLUSTER1_NAME}" --zone "${ZONE1}" --project "${PROJECT_ID}"
 kubectl apply -f services-cluster1.yaml
 
-gcloud container clusters get-credentials "${CLUSTER2_NAME}" --region "${REGION2}" --project "${PROJECT_ID}"
+gcloud container clusters get-credentials "${CLUSTER2_NAME}" --zone "${ZONE2}" --project "${PROJECT_ID}"
 kubectl apply -f services-cluster2.yaml
 
 echo "Services and ServiceExports deployed to both clusters."
@@ -165,7 +167,7 @@ spec:
 EOF
 
 echo "Applying Gateway and HTTPRoute to config cluster '${CLUSTER1_NAME}'..."
-gcloud container clusters get-credentials "${CLUSTER1_NAME}" --region "${REGION1}" --project "${PROJECT_ID}"
+gcloud container clusters get-credentials "${CLUSTER1_NAME}" --zone "${ZONE1}" --project "${PROJECT_ID}"
 kubectl apply -f gateway.yaml
 
 # --- Step 3: Wait for Gateway IP and Validate ---
