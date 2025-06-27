@@ -129,7 +129,7 @@ metadata:
   name: external-http
   namespace: store
 spec:
-  gatewayClassName: gke-l7-gxlb-mc
+  gatewayClassName: gke-l7-global-external-managed-mc
   listeners:
   - name: http
     protocol: HTTP
@@ -138,7 +138,7 @@ spec:
       namespaces:
         from: All
 ---
-apiVersion: gateway.networking.k8s.io/v1
+apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
   name: store-route
@@ -154,7 +154,7 @@ spec:
     backendRefs:
     - name: store-region1
       group: net.gke.io
-      kind: Service
+      kind: ServiceImport
       port: 8080
   - matches:
     - path:
@@ -163,12 +163,12 @@ spec:
     backendRefs:
     - name: store-region2
       group: net.gke.io
-      kind: Service
+      kind: ServiceImport
       port: 8080
   - backendRefs:
     - name: store
       group: net.gke.io
-      kind: Service
+      kind: ServiceImport
       port: 8080
 EOF
 
