@@ -12,8 +12,8 @@ ZONE1=$(gcloud container clusters list --format json | jq -r '.[0].zone')
 ZONE2=$(gcloud container clusters list --format json | jq -r '.[1].zone')
 REGION1=$(echo $ZONE1 | awk -F'-' '{print $1 "-" $2}')
 REGION2=$(echo $ZONE2 | awk -F'-' '{print $1 "-" $2}')
-CLUSTER1_NAME=$(gcloud container clusters list --zone $ZONE1 --format json | jq -r '.[0].name')
-CLUSTER2_NAME=$(gcloud container clusters list --zone $ZONE2 --format json | jq -r '.[1].name')
+CLUSTER1_NAME=$(gcloud container clusters list --zone $ZONE1 --format json | jq -r '.[].name')
+CLUSTER2_NAME=$(gcloud container clusters list --zone $ZONE2 --format json | jq -r '.[].name')
 
 # Artifact Registry and Image details (from previous step)
 REPO_NAME="cepf-app-mod-repo"
