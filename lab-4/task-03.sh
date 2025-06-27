@@ -18,8 +18,8 @@ CLUSTER1_NAME="cepf-gke-cluster-1"
 CLUSTER2_NAME="cepf-gke-cluster-2"
 
 # Fleet membership names as specified in the task
-MEMBERSHIP1_NAME="${CLUSTER1_NAME}-membership"
-MEMBERSHIP2_NAME="${CLUSTER2_NAME}-membership"
+MEMBERSHIP1_NAME="${CLUSTER1_NAME}"
+MEMBERSHIP2_NAME="${CLUSTER2_NAME}"
 
 # The fleet host project is typically the same as the project ID
 FLEET_HOST_PROJECT=$PROJECT_ID
