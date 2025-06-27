@@ -7,19 +7,19 @@
 # Ensure these variables are set correctly for your environment.
 PROJECT_ID=$(gcloud config get-value project)
 # NOTE: Qwiklabs will give you a region to use in the instructions once the environment is provisioned. Use that region here.
-REGION1="us-west1" # Lab start region / location of the first cluster
-ZONE1="$REGION1-a" # the zone for gke cluster 1
-REGION2="europe-west4"    # Location of the second cluster
-ZONE2="$REGION2-a" # the zone for gke cluster 2
 
-# NOTE: Update with the names of the pre-existing GKE clusters
-CLUSTER1_NAME="cepf-gke-cluster-1"
-CLUSTER2_NAME="cepf-gke-cluster-2"
+ZONE1=$(gcloud container clusters list --format json | jq -r '.[0].zone')
+ZONE2=$(gcloud container clusters list --format json | jq -r '.[1].zone')
+REGION1=$(echo $ZONE1 | awk -F'-' '{print $1 "-" $2}')
+REGION2=$(echo $ZONE2 | awk -F'-' '{print $1 "-" $2}')
+CLUSTER1_NAME=$(gcloud container clusters list --format json | jq -r '.[0].name')
+CLUSTER2_NAME=$(gcloud container clusters list --format json | jq -r '.[1].name')
 
 # Artifact Registry and Image details (from previous step)
 REPO_NAME="cepf-app-mod-repo"
 IMAGE_NAME="whereami-app"
-IMAGE_URI="$REGION1-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$IMAGE_NAME"
+ARTIFACTREGISTRYREGION=$(gcloud artifacts repositories list --format json  | jq -r '.[].name' | awk -F'/' '{print $4}')
+IMAGE_URI="$ARTIFACTREGISTRYREGION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$IMAGE_NAME"
 
 # Cloud Deploy resource names
 PIPELINE_NAME="cepf-gke-pipeline"
@@ -112,10 +112,10 @@ gke:
 EOF
 
 # 4. Apply the delivery pipeline to Google Cloud Deploy
-echo "Applying the delivery pipeline in region $REGION1..."
+echo "Applying the delivery pipeline in region $ARTIFACTREGISTRYREGION..."
 gcloud deploy apply \
   --file=delivery-pipeline.yaml \
-  --region=$REGION1 \
+  --region=$ARTIFACTREGISTRYREGION \
   --project=$PROJECT_ID
 
 # 5. Create a release to start the deployment
@@ -123,14 +123,14 @@ gcloud deploy apply \
 echo "Creating release '$RELEASE_NAME' to initiate deployment..."
 gcloud deploy releases create $RELEASE_NAME \
   --delivery-pipeline=$PIPELINE_NAME \
-  --region=$REGION1 \
+  --region=$ARTIFACTREGISTRYREGION \
   --skaffold-file=skaffold.yaml \
   --source=. \
   --project=$PROJECT_ID
 
 echo "Deployment to the first cluster ($CLUSTER1_NAME) has started."
 echo "You can monitor the progress here:"
-echo "https://console.cloud.google.com/deploy/delivery-pipelines/$REGION1/$PIPELINE_NAME/releases?project=$PROJECT_ID"
+echo "https://console.cloud.google.com/deploy/delivery-pipelines/$ARTIFACTREGISTRYREGION/$PIPELINE_NAME?project=$PROJECT_ID"
 echo ""
 
 echo "Wait for the rollout to the first target to complete successfully."

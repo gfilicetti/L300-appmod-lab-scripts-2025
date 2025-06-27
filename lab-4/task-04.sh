@@ -8,14 +8,13 @@
 # These should be consistent with the values used in previous tasks.
 PROJECT_ID=$(gcloud config get-value project)
 # NOTE: Qwiklabs will give you a region to use in the instructions once the environment is provisioned. Use that region here.
-REGION1="us-west1" # Lab start region / location of the first cluster
-ZONE1="$REGION1-a" # the zone for gke cluster 1
-REGION2="europe-west4"    # Location of the second cluster
-ZONE2="$REGION2-a" # the zone for gke cluster 2
 
-# IMPORTANT: Update with the names of your GKE clusters, consistent with task-02.sh
-CLUSTER1_NAME="cepf-gke-cluster-1"
-CLUSTER2_NAME="cepf-gke-cluster-2"
+ZONE1=$(gcloud container clusters list --format json | jq -r '.[0].zone')
+ZONE2=$(gcloud container clusters list --format json | jq -r '.[1].zone')
+REGION1=$(echo $ZONE1 | awk -F'-' '{print $1 "-" $2}')
+REGION2=$(echo $ZONE2 | awk -F'-' '{print $1 "-" $2}')
+CLUSTER1_NAME=$(gcloud container clusters list --format json | jq -r '.[0].name')
+CLUSTER2_NAME=$(gcloud container clusters list --format json | jq -r '.[1].name')
 
 # --- Script Execution ---
 
