@@ -175,6 +175,10 @@ echo "Applying Gateway and HTTPRoute to config cluster '${CLUSTER1_NAME}'..."
 gcloud container clusters get-credentials "${CLUSTER1_NAME}" --zone "${ZONE1}" --project "${PROJECT_ID}"
 kubectl apply -f gateway.yaml
 
+echo "Applying Gateway and HTTPRoute to config cluster '${CLUSTER2_NAME}'..."
+gcloud container clusters get-credentials "${CLUSTER2_NAME}" --zone "${ZONE2}" --project "${PROJECT_ID}"
+kubectl apply -f gateway.yaml
+
 # --- Step 3: Wait for Gateway IP and Validate ---
 
 echo "Waiting for Gateway to be assigned an external IP address... (This may take several minutes)"
