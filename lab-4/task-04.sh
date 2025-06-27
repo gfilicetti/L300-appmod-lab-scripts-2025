@@ -129,7 +129,7 @@ metadata:
   name: external-http
   namespace: store
 spec:
-  gatewayClassName: gke-l7-global-external-managed-mc
+  gatewayClassName: gke-l7-gxlb-mc
   listeners:
   - name: http
     protocol: HTTP
